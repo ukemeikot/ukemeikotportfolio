@@ -37,24 +37,24 @@ const Portfolio = () => {
       items: ["Flutter & Dart", "Android SDK (Kotlin)", "Jetpack Compose", "React Native"]
     },
     {
-      title: "Frontend Development",
-      icon: "code",
-      items: ["React.js & Next.js", "Responsive UI Design", "State Management"]
-    },
-    {
       title: "Backend & APIs",
       icon: "⚙️",
-      items: ["Firebase Services", "Node.js", "RESTful APIs", "GraphQL"]
+      items: ["Python (FastAPI)", "Java (Spring Boot)", "Node.js", "RESTful & GraphQL"]
+    },
+    {
+      title: "Frontend Development",
+      icon: "code",
+      items: ["React.js & Next.js", "TypeScript", "Responsive UI Design", "State Management"]
     },
     {
       title: "DevOps & Tooling",
       icon: "📊",
-      items: ["CI/CD (GitHub Actions)", "Gradle Optimization", "App Store Publishing"]
+      items: ["CI/CD (GitHub Actions)", "Firebase Services", "Gradle Optimization", "App Store Publishing"]
     },
     {
       title: "Architecture & Practices",
       icon: "🏠",
-      items: ["Clean Architecture", "Modular Codebases", "Performance Optimization"]
+      items: ["Clean Architecture", "Modular Codebases", "Performance Optimization", "Microservices"]
     },
     {
       title: "Collaboration & Leadership",
@@ -87,7 +87,7 @@ const Portfolio = () => {
       title: "Real-Time Comms Backend",
       type: "System Architecture",
       description: "Backend infrastructure for high-concurrency messaging and VoIP calling.",
-      details: "A specialized backend designed for low-latency communication. Leveraging Socket.io for messaging and WebRTC for signaling.",
+      details: "A specialized backend designed for low-latency communication. Leveraging Socket.io for messaging and WebRTC for signaling. Built with scalability and modularity in mind.",
       tech: ["Node.js", "Socket.io", "WebRTC", "PostgreSQL", "Redis"],
       link: "https://github.com/ukemeikot",
     }
@@ -153,10 +153,7 @@ const Portfolio = () => {
           <li className="hover:text-white transition-colors cursor-pointer" onClick={() => scrollToSection('skills')}>Skills</li>
           <li className="hover:text-white transition-colors cursor-pointer" onClick={() => scrollToSection('contact')}>Contact</li>
         </ul>
-        <button 
-          className="md:hidden text-[#4ADE80] font-mono z-[70] relative" 
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-        >
+        <button className="md:hidden text-[#4ADE80] font-mono z-[70] relative" onClick={() => setIsMenuOpen(!isMenuOpen)}>
           {isMenuOpen ? '[ CLOSE ]' : '[ MENU ]'}
         </button>
         {isMenuOpen && (
@@ -185,11 +182,10 @@ const Portfolio = () => {
               <a href="https://github.com/ukemeikot" target="_blank" rel="noreferrer" className="hover:text-[#4ADE80] transition-colors underline decoration-gray-800 underline-offset-4">GitHub</a>
             </div>
             <p className="text-gray-400 max-w-lg text-lg font-light leading-relaxed italic">
-                Specialized in <span className="text-white font-bold">SDK development</span>, <span className="text-white font-bold">cross-platform solutions</span>, and <span className="text-white font-bold">performance optimization</span>.
+                Specialized in <span className="text-white font-bold">SDK development</span>, <span className="text-white font-bold">Clean Architecture</span>, and <span className="text-white font-bold">Distributed Systems</span>.
             </p>
           </div>
           
-          {/* ADJUSTED PROFILE IMAGE CONTAINER */}
           <div className="md:col-span-5 relative group flex justify-center">
              <div className="absolute -inset-2 bg-gradient-to-b from-[#4ADE80]/20 to-transparent blur-2xl rounded-full group-hover:opacity-40 transition-opacity"></div>
              <div className="relative w-full max-w-[420px] rounded-[3rem] border border-gray-800 bg-[#161616] p-4 overflow-hidden">
@@ -212,9 +208,7 @@ const Portfolio = () => {
               <div key={idx} className="bg-[#161616] border border-gray-800 p-8 rounded-3xl hover:border-[#4ADE80]/30 transition-all">
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-12 h-12 bg-[#1A1A1A] rounded-2xl flex items-center justify-center border border-gray-700 text-xl">
-                    {skill.icon === "code" ? (
-                        <span className="text-[#4ADE80] font-mono">&lt;/&gt;</span>
-                    ) : skill.icon}
+                    {skill.icon === "code" ? <span className="text-[#4ADE80] font-mono">&lt;/&gt;</span> : skill.icon}
                   </div>
                   <h3 className="text-xl font-bold uppercase tracking-tight">{skill.title}</h3>
                 </div>
