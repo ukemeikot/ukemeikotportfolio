@@ -187,7 +187,7 @@ const Portfolio = () => {
               {"< First Class Software Engineer />"}
             </div>
             <h1 className="text-4xl md:text-7xl lg:text-[90px] font-black leading-[0.9] md:leading-[0.85] uppercase tracking-tighter mb-8 italic break-words">
-              Building<br />Scaleable<br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-gray-800">Infrastructures</span>
+              Building<br />Scaleable<br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-gray-600">Infrastructures</span>
             </h1>
             <div className="flex flex-wrap gap-4 md:gap-6 text-gray-500 font-mono text-[10px] uppercase tracking-wider mb-12">
               <a href="https://linkedin.com/in/ukeme-ikot" target="_blank" className="hover:text-[#4ADE80] transition-colors underline decoration-gray-800 underline-offset-4">LinkedIn</a>
@@ -259,9 +259,21 @@ const Portfolio = () => {
           </div>
         </section>
 
-        <section id="contact" className="py-40 text-center">
-          <h2 className="text-6xl md:text-[10rem] font-black uppercase tracking-tighter leading-none mb-12">Connect</h2>
-          <a href="mailto:ukemeetim2222@gmail.com" className="text-lg md:text-4xl font-light hover:text-[#4ADE80] transition-colors border-b border-gray-800 pb-2 italic break-all">ukemeetim2222@gmail.com</a>
+        <section id="contact" className="py-40 text-center border-t border-gray-900">
+          <p className="text-[#4ADE80] font-mono text-[10px] mb-4 uppercase tracking-[0.3em]">{"[ Contact ]"}</p>
+          <h2 className="text-6xl md:text-[10rem] font-black uppercase tracking-tighter leading-none mb-12 italic">Connect</h2>
+          
+          <div className="flex flex-col items-center gap-8">
+            <a href="mailto:ukemeetim2222@gmail.com" className="text-lg md:text-4xl font-light hover:text-[#4ADE80] transition-colors border-b border-gray-800 pb-2 italic break-all">
+              ukemeetim2222@gmail.com
+            </a>
+            
+            <div className="flex gap-8 md:gap-12 mt-4 flex-wrap justify-center font-mono text-[10px] md:text-xs uppercase tracking-widest text-gray-500">
+              <a href="https://linkedin.com/in/ukeme-ikot" target="_blank" className="hover:text-white transition-colors">LinkedIn</a>
+              <a href="https://github.com/ukemeikot" target="_blank" className="hover:text-white transition-colors">GitHub</a>
+              <a href="https://x.com/UkemeEtim7" target="_blank" className="hover:text-white transition-colors">Twitter (X)</a>
+            </div>
+          </div>
         </section>
       </main>
 
