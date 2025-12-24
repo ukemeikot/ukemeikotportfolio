@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 // --- IMAGE IMPORTS ---
-// Importing here ensures Vite bundles them correctly for Vercel
 import ukemeImg from './assets/ukeme.jpg';
 
 // Project: Noramum
@@ -43,6 +42,15 @@ const Portfolio = () => {
 
   const projects: Project[] = [
     {
+      title: "CryptoCredWallet",
+      type: "Mobile App",
+      description: "A high-performance Web3 dashboard featuring live market data and offline resilience.",
+      details: "Built to solve data volatility issues in Web3. It features a robust caching layer using AsyncStorage and custom OHLC Candlestick charts. Includes search, favorites, and multi-theme support.",
+      tech: ["React Native", "TypeScript", "Expo Router", "CoinGecko API"],
+      link: "https://github.com/ukemeikot/CryptoCredWallet",
+      images: [crypto1, crypto2] 
+    },
+    {
       title: "Noramum.app",
       type: "Web & Mobile Ecosystem",
       description: "Full-cycle development of a cross-platform ecosystem for mothers and childcare.",
@@ -50,16 +58,7 @@ const Portfolio = () => {
       tech: ["React.js", "React Native", "Tailwind CSS", "Redux", "Node.js"],
       liveLink: "https://noramum.app",
       link: "https://github.com/ukemeikot",
-      images: [noraWeb, noraMobile] // Using imported variables
-    },
-    {
-      title: "CryptoCredWallet",
-      type: "Mobile App",
-      description: "A high-performance Web3 dashboard featuring live market data and offline resilience.",
-      details: "Built to solve data volatility issues in Web3. It features a robust caching layer using AsyncStorage and custom OHLC Candlestick charts. Includes search, favorites, and multi-theme support.",
-      tech: ["React Native", "TypeScript", "Expo Router", "CoinGecko API"],
-      link: "https://github.com/ukemeikot/CryptoCredWallet",
-      images: [crypto1, crypto2] // Using imported variables
+      images: [noraWeb, noraMobile] 
     },
     {
       title: "Real-Time Comms Backend",
@@ -186,7 +185,6 @@ const Portfolio = () => {
       </nav>
 
       <main id="home" className="max-w-7xl mx-auto px-6 pt-12 md:pt-20 pb-20">
-        {/* HERO SECTION */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-start mb-40">
           <div className="md:col-span-8">
             <div className="inline-block bg-[#1A1A1A] px-4 py-1 rounded-full border border-gray-800 mb-6 font-mono text-[10px] tracking-[0.2em] text-[#4ADE80]">
@@ -210,7 +208,6 @@ const Portfolio = () => {
           </div>
         </div>
 
-        {/* PROJECTS SECTION */}
         <section id="projects" className="py-20 border-t border-gray-900">
           <p className="text-[#4ADE80] font-mono text-[10px] mb-4 uppercase tracking-[0.3em]">{"[ Selection ]"}</p>
           <h2 className="text-6xl md:text-8xl font-black uppercase tracking-tighter mb-16 italic text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-800">Work</h2>
@@ -239,7 +236,6 @@ const Portfolio = () => {
           </div>
         </section>
 
-        {/* TECH STACK SECTION */}
         <section id="stack" className="py-32 overflow-hidden border-y border-gray-900">
            <div className="flex gap-12 animate-marquee whitespace-nowrap opacity-20">
             {[...techStack, ...techStack].map((tech, index) => (
@@ -250,7 +246,6 @@ const Portfolio = () => {
           </div>
         </section>
 
-        {/* CONTACT SECTION */}
         <section id="contact" className="py-40 text-center">
           <h2 className="text-7xl md:text-[12rem] font-black uppercase tracking-tighter leading-none mb-12">Talk</h2>
           <a href="mailto:ukemeetim2222@gmail.com" className="text-2xl md:text-4xl font-light hover:text-[#4ADE80] transition-colors border-b border-gray-800 pb-2">ukemeetim2222@gmail.com</a>
