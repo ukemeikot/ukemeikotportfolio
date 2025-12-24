@@ -184,7 +184,7 @@ const Portfolio = () => {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-start mb-24 md:mb-40">
           <div className="md:col-span-7">
             <div className="inline-block bg-[#1A1A1A] px-4 py-1 rounded-full border border-gray-800 mb-6 font-mono text-[9px] md:text-[10px] tracking-[0.2em] text-[#4ADE80]">
-              {"< First Class Software Engineer />"}
+              {"< Mobile and Full Stack Software Engineer />"}
             </div>
             <h1 className="text-4xl md:text-7xl lg:text-[90px] font-black leading-[0.9] md:leading-[0.85] uppercase tracking-tighter mb-8 italic break-words">
               Building<br />Scaleable<br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-gray-600">Infrastructures</span>
