@@ -266,7 +266,7 @@ const Portfolio = () => {
       </main>
 
       <footer className="max-w-7xl mx-auto px-6 py-10 border-t border-gray-900 text-gray-600 text-[8px] md:text-[10px] uppercase tracking-widest flex flex-col md:flex-row justify-between gap-4 text-center md:text-left">
-         <p>© 2025 UKEME IKOT. BEST GRADUATING STUDENT (ENGINEERING).</p>
+         <p>© 2025 UKEME IKOT</p>
          <p>NIGERIA / WORLDWIDE</p>
       </footer>
     </div>
