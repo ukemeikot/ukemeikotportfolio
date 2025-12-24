@@ -1,5 +1,16 @@
 import { useState } from 'react';
+
+// --- IMAGE IMPORTS ---
+// Importing here ensures Vite bundles them correctly for Vercel
 import ukemeImg from './assets/ukeme.jpg';
+
+// Project: Noramum
+import noraWeb from './assets/nora-web.jpg';
+import noraMobile from './assets/nora-mobile.jpg';
+
+// Project: CryptoCred
+import crypto1 from './assets/crypto1.jpg';
+import crypto2 from './assets/crypto2.jpg';
 
 interface Project {
   title: string;
@@ -35,11 +46,11 @@ const Portfolio = () => {
       title: "Noramum.app",
       type: "Web & Mobile Ecosystem",
       description: "Full-cycle development of a cross-platform ecosystem for mothers and childcare.",
-      details: "For Noramum, I was responsible for bridging the user experience between a high-performance React web dashboard and a native mobile application. The project involved complex state synchronization to ensure mothers have real-time access to data across all their devices. I implemented a unified design system using Tailwind CSS to maintain brand consistency.",
+      details: "For Noramum, I was responsible for bridging the user experience between a high-performance React web dashboard and a native mobile application. The project involved complex state synchronization to ensure mothers have real-time access to data across all their devices.",
       tech: ["React.js", "React Native", "Tailwind CSS", "Redux", "Node.js"],
       liveLink: "https://noramum.app",
       link: "https://github.com/ukemeikot",
-      images: ["/src/assets/nora-web.jpg", "/src/assets/nora-mobile.jpg"] // Replace with your filenames
+      images: [noraWeb, noraMobile] // Using imported variables
     },
     {
       title: "CryptoCredWallet",
@@ -48,7 +59,7 @@ const Portfolio = () => {
       details: "Built to solve data volatility issues in Web3. It features a robust caching layer using AsyncStorage and custom OHLC Candlestick charts. Includes search, favorites, and multi-theme support.",
       tech: ["React Native", "TypeScript", "Expo Router", "CoinGecko API"],
       link: "https://github.com/ukemeikot/CryptoCredWallet",
-      images: ["/src/assets/crypto1.jpg", "/src/assets/crypto2.jpg"] // Replace with your filenames
+      images: [crypto1, crypto2] // Using imported variables
     },
     {
       title: "Real-Time Comms Backend",
@@ -110,14 +121,26 @@ const Portfolio = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-6">
-              {activeProject.images?.map((img, i) => (
-                <div key={i} className="rounded-2xl overflow-hidden border border-gray-900 bg-[#161616] group shadow-2xl">
-                   <img src={img} alt="Project Preview" className="w-full h-auto grayscale group-hover:grayscale-0 transition-all duration-700" />
-                </div>
-              ))}
+            {/* Optimized Phone-Sized Image Gallery */}
+            <div className="flex flex-col items-center lg:items-end gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-12 w-full max-w-[320px] md:max-w-full lg:max-w-[340px]">
+                {activeProject.images?.map((img, i) => (
+                  <div 
+                    key={i} 
+                    className="relative rounded-[2.5rem] overflow-hidden border-[8px] border-[#1A1A1A] bg-[#000] shadow-2xl transition-transform duration-500 hover:scale-[1.02]"
+                    style={{ aspectRatio: '9/19' }} 
+                  >
+                    <img 
+                      src={img} 
+                      alt="App Screenshot" 
+                      className="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-700" 
+                    />
+                    <div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-white/5 to-transparent"></div>
+                  </div>
+                ))}
+              </div>
               {!activeProject.images && (
-                <div className="aspect-video bg-[#161616] rounded-2xl border border-gray-900 flex items-center justify-center text-gray-700 font-mono text-xs text-center p-8 uppercase tracking-widest">
+                <div className="w-full aspect-video bg-[#161616] rounded-2xl border border-gray-900 flex items-center justify-center text-gray-700 font-mono text-xs text-center p-8 uppercase tracking-widest">
                   [ System Architecture Visual Placeholder ]
                 </div>
               )}
@@ -173,7 +196,6 @@ const Portfolio = () => {
               Engineering<br />Mobile-First<br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-gray-600">Full Stack Apps</span>
             </h1>
 
-            {/* RESTORED SOCIAL LINKS */}
             <div className="flex flex-wrap gap-6 text-gray-500 font-mono text-xs uppercase tracking-wider mb-12">
               <a href="https://x.com/UkemeEtim7" target="_blank" rel="noreferrer" className="hover:text-[#4ADE80] transition-colors underline decoration-gray-800 underline-offset-4">Twitter (X)</a>
               <a href="https://linkedin.com/in/ukeme-ikot" target="_blank" rel="noreferrer" className="hover:text-[#4ADE80] transition-colors underline decoration-gray-800 underline-offset-4">LinkedIn</a>
@@ -191,7 +213,7 @@ const Portfolio = () => {
         {/* PROJECTS SECTION */}
         <section id="projects" className="py-20 border-t border-gray-900">
           <p className="text-[#4ADE80] font-mono text-[10px] mb-4 uppercase tracking-[0.3em]">{"[ Selection ]"}</p>
-          <h2 className="text-6xl md:text-8xl font-black uppercase tracking-tighter mb-16 italic">Work</h2>
+          <h2 className="text-6xl md:text-8xl font-black uppercase tracking-tighter mb-16 italic text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-800">Work</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {projects.map((project, index) => (
               <div 
@@ -200,16 +222,18 @@ const Portfolio = () => {
                    setActiveProject(project);
                    window.scrollTo(0,0);
                 }}
-                className="group cursor-pointer bg-[#0A0A0A] border border-gray-900 p-8 rounded-3xl hover:border-[#4ADE80]/40 transition-all duration-500"
+                className="group cursor-pointer bg-[#0A0A0A] border border-gray-900 p-8 rounded-3xl hover:border-[#4ADE80]/40 transition-all duration-500 flex flex-col justify-between"
               >
                 <div className="mb-12">
                    <p className="text-[#4ADE80] font-mono text-[9px] uppercase tracking-widest mb-2 italic">0{index + 1} / {project.type}</p>
                    <h3 className="text-3xl font-black uppercase tracking-tighter group-hover:text-[#4ADE80] transition-colors">{project.title}</h3>
                 </div>
-                <p className="text-gray-500 text-sm font-light leading-relaxed mb-8 line-clamp-3">{project.description}</p>
-                <p className="text-white text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2">
-                   View Case Study <span className="text-[#4ADE80]">+</span>
-                </p>
+                <div>
+                  <p className="text-gray-500 text-sm font-light leading-relaxed mb-8 line-clamp-3">{project.description}</p>
+                  <p className="text-white text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2 group-hover:translate-x-2 transition-transform">
+                    View Case Study <span className="text-[#4ADE80]">+</span>
+                  </p>
+                </div>
               </div>
             ))}
           </div>
