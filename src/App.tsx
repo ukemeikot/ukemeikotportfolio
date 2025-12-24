@@ -97,7 +97,7 @@ const Portfolio = () => {
       description: "Backend infrastructure for high-concurrency messaging and secure VoIP calling.",
       details: "A specialized backend designed for low-latency communication. Leveraging Socket.io for messaging and WebRTC for signaling. Optimized for scalability using Redis as a message broker and built following strict Clean Architecture principles.",
       tech: ["Node.js", "Socket.io", "WebRTC", "PostgreSQL", "Redis"],
-      link: "https://github.com/ukemeikot",
+      link: "https://github.com/ukemeikot/messaging_and_calling_backend",
     }
   ];
 
@@ -138,8 +138,8 @@ const Portfolio = () => {
               {activeProject.images ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-12 w-full max-w-[300px] md:max-w-full lg:max-w-[340px]">
                   {activeProject.images.map((img, i) => (
-                    <div key={i} className="relative rounded-[2.5rem] overflow-hidden border-[8px] border-[#1A1A1A] bg-[#000] shadow-2xl mx-auto md:mx-0" style={{ aspectRatio: '9/19' }}>
-                      <img src={img} alt="Screenshot" className="w-full h-full object-cover" />
+                    <div key={i} className="relative rounded-[2.5rem] overflow-hidden border-[8px] border-[#1A1A1A] bg-[#000] shadow-2xl mx-auto md:mx-0">
+                      <img src={img} alt="Screenshot" className="w-full h-auto object-contain" />
                     </div>
                   ))}
                 </div>
