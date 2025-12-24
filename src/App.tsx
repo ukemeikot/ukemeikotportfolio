@@ -16,7 +16,7 @@ const Portfolio = () => {
           <li className="text-[#4ADE80] cursor-pointer">Home</li>
           <li className="hover:text-white transition-colors cursor-pointer">Projects</li>
           <li className="hover:text-white transition-colors cursor-pointer">Tech Stack</li>
-          <li className="hover:text-white transition-colors cursor-pointer">Contact</li>
+          <li className="hover:text-white transition-colors cursor-pointer">Contact Me</li>
         </ul>
 
         <button className="hidden md:block border border-[#4ADE80] text-[#4ADE80] px-6 py-2 rounded-full text-xs font-bold hover:bg-[#4ADE80] hover:text-black transition-all duration-300">
