@@ -253,7 +253,7 @@ const Portfolio = () => {
         {/* CONTACT SECTION */}
         <section id="contact" className="py-40 text-center">
           <h2 className="text-7xl md:text-[12rem] font-black uppercase tracking-tighter leading-none mb-12">Talk</h2>
-          <a href="mailto:ukemeetim7@gmail.com" className="text-2xl md:text-4xl font-light hover:text-[#4ADE80] transition-colors border-b border-gray-800 pb-2">ukemeetim7@gmail.com</a>
+          <a href="mailto:ukemeetim2222@gmail.com" className="text-2xl md:text-4xl font-light hover:text-[#4ADE80] transition-colors border-b border-gray-800 pb-2">ukemeetim2222@gmail.com</a>
         </section>
       </main>
     </div>
