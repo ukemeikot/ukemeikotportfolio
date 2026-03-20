@@ -1,0 +1,65 @@
+/* REFACTORED */
+.card {
+  display: grid;
+  gap: var(--space-8);
+  height: 100%;
+  padding: var(--space-6);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 92%, transparent), var(--color-surface));
+  transition:
+    transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    border-color var(--transition-fast);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-soft);
+  border-color: color-mix(in srgb, var(--color-accent) 38%, var(--color-border));
+}
+
+.top {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.type {
+  margin: 0;
+  color: var(--color-accent);
+  font: var(--type-label);
+}
+
+.title {
+  margin: 0;
+  font: var(--type-h3);
+}
+
+.copy {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.line {
+  margin: 0;
+  color: var(--color-text-muted);
+  font: var(--type-body);
+}
+
+.line strong {
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  justify-self: start;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-primary);
+  font: var(--type-label);
+  cursor: pointer;
+}

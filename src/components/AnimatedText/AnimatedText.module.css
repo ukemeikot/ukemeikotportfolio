@@ -1,0 +1,39 @@
+/* REFACTORED */
+.wrapper {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.line {
+  display: block;
+  white-space: nowrap;
+}
+
+.word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(24px);
+  animation: hero-word-reveal 0.6s ease-out forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes hero-word-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .word {
+    opacity: 1;
+    transform: none;
+    animation: none;
+    will-change: auto;
+  }
+}

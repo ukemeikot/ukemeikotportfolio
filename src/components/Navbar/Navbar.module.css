@@ -1,0 +1,121 @@
+/* REFACTORED */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  padding: var(--space-4) var(--space-6);
+  transition:
+    padding var(--transition-base),
+    border-color var(--transition-base),
+    background-color var(--transition-base),
+    backdrop-filter var(--transition-base);
+}
+
+.condensed {
+  padding-top: var(--space-3);
+  padding-bottom: var(--space-3);
+  backdrop-filter: blur(12px);
+  background: color-mix(in srgb, var(--color-bg) 88%, transparent);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  width: min(100%, var(--content-max));
+  margin: 0 auto;
+}
+
+.brand,
+.link,
+.themeToggle,
+.mobileMenu,
+.overlayLink {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.brandMark {
+  color: var(--color-accent);
+}
+
+.desktopNav {
+  display: none;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.link {
+  padding: var(--space-2) var(--space-3);
+  color: var(--color-text-muted);
+  font: var(--type-label);
+  transition: color var(--transition-fast);
+}
+
+.link:hover,
+.overlayLink:hover {
+  color: var(--color-text-primary);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.themeToggle,
+.mobileMenu {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  color: var(--color-text-primary);
+  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+}
+
+.overlay {
+  position: fixed;
+  inset: 4.75rem var(--space-4) auto;
+  z-index: 35;
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+  backdrop-filter: blur(16px);
+}
+
+.overlayLink {
+  padding: var(--space-3);
+  text-align: left;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+}
+
+@media (min-width: 48rem) {
+  .desktopNav {
+    display: flex;
+  }
+
+  .mobileMenu,
+  .overlay {
+    display: none;
+  }
+}
