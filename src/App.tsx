@@ -1,19 +1,14 @@
 // REFACTORED
-import {
-  Suspense,
-  lazy,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import { Suspense, lazy, useCallback, useEffect, useState } from 'react';
 import Footer from './components/Footer';
 import Hero from './components/Hero';
 import Navbar from './components/Navbar';
 import ProjectDetail from './components/ProjectDetail';
+import Quotes from './components/Quotes';
 import ScrollReveal from './components/ScrollReveal';
 import SectionWrapper from './components/SectionWrapper';
-import SkillBadge from './components/SkillBadge';
+import Skills from './components/Skills';
+import { articles } from './data/articles';
 import { experience } from './data/experience';
 import { projects } from './data/projects';
 import {
@@ -21,13 +16,13 @@ import {
   contactContent,
   heroContent,
   navItems,
-  portrait,
   socialLinks,
 } from './data/siteContent';
 import { skills } from './data/skills';
 import type { ProjectEntry } from './data/types';
 
 const About = lazy(() => import('./components/About'));
+const Articles = lazy(() => import('./components/Articles'));
 const ExperienceTimeline = lazy(() => import('./components/ExperienceTimeline'));
 const ProjectGrid = lazy(() => import('./components/ProjectGrid'));
 
@@ -84,72 +79,60 @@ const App = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
-  const skillCards = useMemo(
-    () =>
-      skills.map((skill, index) => (
-        <SkillBadge key={skill.title} skill={skill} delay={index * 100} />
-      )),
-    []
-  );
-
   if (activeProject) {
     return (
       <div className="app-shell">
-        <Navbar
-          items={navItems}
-          onNavigate={handleNavigate}
-          theme={theme}
-          onToggleTheme={toggleTheme}
-        />
-        <ProjectDetail project={activeProject} onClose={() => setActiveProject(null)} />
+        <div className="site-card">
+          <Navbar
+            items={navItems}
+            onNavigate={handleNavigate}
+            theme={theme}
+            onToggleTheme={toggleTheme}
+          />
+          <ProjectDetail project={activeProject} onClose={() => handleNavigate('projects')} />
+        </div>
       </div>
     );
   }
 
   return (
     <div className="app-shell">
-      <Navbar
-        items={navItems}
-        onNavigate={handleNavigate}
-        theme={theme}
-        onToggleTheme={toggleTheme}
-      />
-      <main>
-        <Hero
-          content={heroContent}
-          socials={socialLinks}
-          portrait={portrait}
+      <div className="site-card">
+        <Navbar
+          items={navItems}
           onNavigate={handleNavigate}
+          theme={theme}
+          onToggleTheme={toggleTheme}
         />
-        <Suspense fallback={null}>
-          <About content={aboutContent} />
-        </Suspense>
-        <SectionWrapper
-          id="skills"
-          eyebrow="Skills"
-          title="A stack built for product delivery, not buzzword collection."
-          intro="I work where interface quality, application logic, and delivery systems meet."
-        >
-          <div className="skills-grid">{skillCards}</div>
-        </SectionWrapper>
-        <Suspense fallback={null}>
-          <ProjectGrid projects={projects} onOpen={openProject} />
-        </Suspense>
-        <Suspense fallback={null}>
-          <ExperienceTimeline items={experience} />
-        </Suspense>
-        <SectionWrapper
-          id="contact"
-          eyebrow={contactContent.eyebrow}
-          title={contactContent.title}
-          intro={contactContent.body}
-          align="center"
-        >
-          <ScrollReveal>
-            <Footer email={contactContent.email} socials={socialLinks} />
-          </ScrollReveal>
-        </SectionWrapper>
-      </main>
+        <main>
+          <Hero content={heroContent} socials={socialLinks} onNavigate={handleNavigate} />
+          <Quotes />
+          <Suspense fallback={null}>
+            <About content={aboutContent} />
+          </Suspense>
+          <Skills skills={skills} />
+          <Suspense fallback={null}>
+            <ProjectGrid projects={projects} onOpen={openProject} />
+          </Suspense>
+          <Suspense fallback={null}>
+            <Articles articles={articles} />
+          </Suspense>
+          <Suspense fallback={null}>
+            <ExperienceTimeline items={experience} />
+          </Suspense>
+          <SectionWrapper
+            id="contact"
+            eyebrow={contactContent.eyebrow}
+            title={contactContent.title}
+            intro={contactContent.body}
+            align="center"
+          >
+            <ScrollReveal>
+              <Footer email={contactContent.email} socials={socialLinks} />
+            </ScrollReveal>
+          </SectionWrapper>
+        </main>
+      </div>
     </div>
   );
 };

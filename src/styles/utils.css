@@ -1,15 +1,50 @@
 /* REFACTORED */
 .app-shell {
   min-height: 100vh;
+  background: var(--color-page);
+  padding: clamp(0.5rem, 1.5vw, 1.25rem);
+}
+
+/* The whole site lives inside a single rounded card, matching the reference. */
+.site-card {
+  position: relative;
+  width: 100%;
+  max-width: 90rem;
+  margin: 0 auto;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: clamp(1.25rem, 3vw, 2.5rem);
+  overflow: clip;
+  isolation: isolate;
+}
+
+/* Faint corner glow rings echoing the reference's decorative circles. */
+.site-card::before,
+.site-card::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.site-card::before {
+  width: 38rem;
+  height: 38rem;
+  top: -12rem;
+  right: -14rem;
+}
+
+.site-card::after {
+  width: 26rem;
+  height: 26rem;
+  bottom: 18%;
+  left: -12rem;
 }
 
 .skills-grid {
   display: grid;
-  gap: var(--space-6);
-}
-
-@media (min-width: 48rem) {
-  .skills-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+  gap: var(--space-4);
 }

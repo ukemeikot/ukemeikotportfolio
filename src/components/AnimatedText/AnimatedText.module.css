@@ -7,6 +7,9 @@
 .line {
   display: block;
   white-space: nowrap;
+  /* Never let a controlled line render wider than its container and spill
+     over neighbouring content (e.g. the hero portrait). */
+  max-width: 100%;
 }
 
 .word {

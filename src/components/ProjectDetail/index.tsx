@@ -150,13 +150,16 @@ const MiraDesktopMockup = () => (
   </div>
 );
 
-const ProjectDetail = ({ project, onClose }: ProjectDetailProps) => (
+const ProjectDetail = ({ project, onClose }: ProjectDetailProps) => {
+  const hasMedia = Boolean(project.isMira) || Boolean(project.images?.length);
+
+  return (
   <div className={styles.page}>
     <button className={styles.back} onClick={onClose}>
       <ArrowLeft size={16} />
       Back to portfolio
     </button>
-    <div className={styles.layout}>
+    <div className={`${styles.layout} ${hasMedia ? '' : styles.layoutSolo}`.trim()}>
       <div className={styles.copy}>
         <p className={styles.type}>{project.type}</p>
         <h1 className={styles.title}>{project.title}</h1>
@@ -188,37 +191,38 @@ const ProjectDetail = ({ project, onClose }: ProjectDetailProps) => (
           ) : null}
         </div>
       </div>
-      <div className={styles.media}>
-        {project.isMira ? (
-          <>
-            <div className={styles.desktopOnly}>
-              <MiraDesktopMockup />
-            </div>
-            <div className={styles.mobileOnly}>
-              <MiraMobileMockup />
-            </div>
-          </>
-        ) : project.images?.length ? (
-          <div className={styles.imageGrid}>
-            {project.images.map((image) => (
-              <div key={image.alt} className={styles.imageFrame}>
-                <img
-                  src={image.src}
-                  alt={image.alt}
-                  width={image.width}
-                  height={image.height}
-                  loading="lazy"
-                  className={styles.image}
-                />
+      {hasMedia ? (
+        <div className={styles.media}>
+          {project.isMira ? (
+            <>
+              <div className={styles.desktopOnly}>
+                <MiraDesktopMockup />
               </div>
-            ))}
-          </div>
-        ) : (
-          <div className={styles.placeholder}>Project visuals available on request.</div>
-        )}
-      </div>
+              <div className={styles.mobileOnly}>
+                <MiraMobileMockup />
+              </div>
+            </>
+          ) : (
+            <div className={styles.imageGrid}>
+              {project.images?.map((image) => (
+                <div key={image.alt} className={styles.imageFrame}>
+                  <img
+                    src={image.src}
+                    alt={image.alt}
+                    width={image.width}
+                    height={image.height}
+                    loading="lazy"
+                    className={styles.image}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      ) : null}
     </div>
   </div>
-);
+  );
+};
 
 export default ProjectDetail;

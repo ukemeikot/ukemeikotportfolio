@@ -1,6 +1,6 @@
 // REFACTORED
-import { memo } from 'react';
-import type { ProjectEntry } from '../../data/types';
+import { useMemo, useState } from 'react';
+import type { ProjectCategory, ProjectEntry, ProjectFilter } from '../../data/types';
 import ProjectCard from '../ProjectCard';
 import SectionWrapper from '../SectionWrapper';
 import styles from './ProjectGrid.module.css';
@@ -10,24 +10,66 @@ interface ProjectGridProps {
   onOpen: (project: ProjectEntry) => void;
 }
 
-const ProjectGrid = ({ projects, onOpen }: ProjectGridProps) => (
-  <SectionWrapper
-    id="projects"
-    eyebrow="Selected Work"
-    title="Projects that blend product thinking with systems depth."
-    intro="Each project balances interface quality, implementation detail, and the operational realities behind production software."
-  >
-    <div className={styles.grid}>
-      {projects.map((project, index) => (
-        <ProjectCard
-          key={project.slug}
-          project={project}
-          delay={index * 100}
-          onOpen={onOpen}
-        />
-      ))}
-    </div>
-  </SectionWrapper>
-);
+const filters: ProjectFilter[] = [
+  { id: 'all', label: 'All' },
+  { id: 'frontend-mobile', label: 'Frontend & Mobile' },
+  { id: 'backend', label: 'Backend' },
+  { id: 'devops', label: 'DevOps' },
+];
 
-export default memo(ProjectGrid);
+const ProjectGrid = ({ projects, onOpen }: ProjectGridProps) => {
+  const [active, setActive] = useState<'all' | ProjectCategory>('all');
+
+  const visible = useMemo(
+    () =>
+      active === 'all'
+        ? projects
+        : projects.filter((project) => project.categories.includes(active as ProjectCategory)),
+    [active, projects]
+  );
+
+  return (
+    <SectionWrapper
+      id="projects"
+      eyebrow="... /Projects ..."
+      title="Selected work across the stack."
+      intro="Frontend, mobile, backend, and DevOps — filter by the layer you care about."
+    >
+      <div className={styles.filters} role="tablist" aria-label="Filter projects by category">
+        {filters.map((filter) => {
+          const count =
+            filter.id === 'all'
+              ? projects.length
+              : projects.filter((project) =>
+                  project.categories.includes(filter.id as ProjectCategory)
+                ).length;
+          return (
+            <button
+              key={filter.id}
+              role="tab"
+              aria-selected={active === filter.id}
+              className={`${styles.filter} ${active === filter.id ? styles.filterActive : ''}`.trim()}
+              onClick={() => setActive(filter.id)}
+            >
+              {filter.label}
+              <span className={styles.count}>{count}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      <div className={styles.grid}>
+        {visible.map((project, index) => (
+          <ProjectCard
+            key={project.slug}
+            project={project}
+            delay={index * 60}
+            onOpen={onOpen}
+          />
+        ))}
+      </div>
+    </SectionWrapper>
+  );
+};
+
+export default ProjectGrid;

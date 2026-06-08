@@ -1,30 +1,55 @@
 // REFACTORED
-import { Blocks, Cloud, Database, Smartphone } from 'lucide-react';
 import type { SkillCategory } from './types';
 
 export const skills: SkillCategory[] = [
   {
-    title: 'Frontend',
-    description: 'Production UI systems for marketing sites, dashboards, and product surfaces that need precision and speed.',
-    items: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Responsive UI'],
-    icon: Blocks,
+    title: 'Front-end',
+    items: [
+      'TypeScript',
+      'React',
+      'Next.js',
+      'React Native',
+      'Expo',
+      'Redux',
+      'TanStack Query',
+      'Vite',
+    ],
   },
   {
-    title: 'Backend',
-    description: 'APIs and service layers built for reliability, observability, and clean contracts between teams.',
-    items: ['Node.js', 'Express', 'FastAPI', 'REST APIs', 'PostgreSQL'],
-    icon: Database,
+    title: 'Styles',
+    items: ['Tailwind CSS', 'CSS Modules', 'Styled Components', 'Responsive UI', 'Figma'],
   },
   {
-    title: 'Mobile',
-    description: 'Native-feeling mobile products with strong offline behavior, stable state, and careful performance work.',
-    items: ['React Native', 'Expo', 'Android SDK', 'Native Modules', 'Offline-first UX'],
-    icon: Smartphone,
+    title: 'Back-end',
+    items: [
+      'Node.js',
+      'Express',
+      'FastAPI',
+      'Python',
+      'Java',
+      'Spring Boot',
+      'Microservices',
+      'ASP.NET Core',
+      'C#',
+      'PostgreSQL',
+      'Redis',
+      'REST',
+      'WebSockets',
+    ],
   },
   {
-    title: 'Tooling & Infra',
-    description: 'Delivery pipelines and developer tooling that reduce friction from local setup to release automation.',
-    items: ['CI/CD', 'GitHub Actions', 'Docker', 'Redis', 'NPM Packages'],
-    icon: Cloud,
+    title: 'DevOps',
+    items: [
+      'Docker',
+      'Docker Compose',
+      'Nginx',
+      'Caddy',
+      'GitHub Actions',
+      'AWS EC2',
+      'OPA',
+      'Prometheus',
+      'Trivy',
+      'CI/CD',
+    ],
   },
 ];

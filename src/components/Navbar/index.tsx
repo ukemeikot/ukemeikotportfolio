@@ -1,6 +1,7 @@
 // REFACTORED
 import { Menu, MoonStar, SunMedium, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import avatarImg from '../../assets/ukeme.jpg';
 import type { NavItem } from '../../data/types';
 import styles from './Navbar.module.css';
 
@@ -32,8 +33,11 @@ const Navbar = ({ items, onNavigate, theme, onToggleTheme }: NavbarProps) => {
       <nav className={`${styles.navbar} ${condensed ? styles.condensed : ''}`.trim()}>
         <div className={styles.inner}>
           <button className={styles.brand} onClick={() => handleNavigate('home')}>
-            <span className={styles.brandMark}>//</span>
-            Ukeme Ikot
+            <img src={avatarImg} alt="Ukeme Ikot" className={styles.brandAvatar} />
+            <span className={styles.brandText}>
+              <span className={styles.brandName}>Ukeme</span>
+              <span className={styles.brandName}>Ikot</span>
+            </span>
           </button>
           <div className={styles.desktopNav}>
             {items.map((item) => (

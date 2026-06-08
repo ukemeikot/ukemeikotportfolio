@@ -1,6 +1,6 @@
 /* REFACTORED */
 .section {
-  padding: clamp(4.5rem, 8vw, 6.5rem) var(--space-6);
+  padding: clamp(3.5rem, 7vw, 6rem) clamp(var(--space-5), 4vw, var(--space-8));
 }
 
 .inner {
@@ -21,13 +21,14 @@
 
 .eyebrow {
   margin: 0 0 var(--space-3);
-  color: var(--color-accent);
+  color: var(--color-text-faint);
   font: var(--type-label);
 }
 
 .title {
   margin: 0;
   font: var(--type-h2);
+  letter-spacing: -0.03em;
   color: var(--color-text-primary);
 }
 

@@ -1,6 +1,4 @@
 // REFACTORED
-import type { LucideIcon } from 'lucide-react';
-
 export interface NavItem {
   id: string;
   label: string;
@@ -12,36 +10,43 @@ export interface SocialLink {
 }
 
 export interface HeroContent {
-  eyebrow: string;
+  role: string;
   headline: string[];
-  summary: string;
-  focus: string;
-  imageAlt: string;
+  goalLead: string;
+  goalEmphasis: string;
+  goalTrail: string;
 }
 
 export interface AboutContent {
   eyebrow: string;
-  title: string;
-  body: string[];
-  facts: Array<{
-    label: string;
-    value: string;
-  }>;
+  greetingLead: string;
+  greetingEmphasis: string;
+  greetingTrail: string;
+  experienceLead: string;
+  experienceEmphasis: string;
+  experienceTrail: string;
 }
 
 export interface SkillCategory {
   title: string;
-  description: string;
   items: string[];
-  icon: LucideIcon;
 }
 
 export interface ExperienceEntry {
-  eyebrow: string;
-  title: string;
   period: string;
-  summary: string;
-  highlights: string[];
+  duration: string;
+  company: string;
+  role: string;
+  stack: string;
+  url?: string;
+}
+
+export interface ArticleEntry {
+  title: string;
+  excerpt: string;
+  url: string;
+  readTime?: string;
+  tag?: string;
 }
 
 export interface ProjectImage {
@@ -51,10 +56,13 @@ export interface ProjectImage {
   height: number;
 }
 
+export type ProjectCategory = 'frontend-mobile' | 'backend' | 'devops';
+
 export interface ProjectEntry {
   slug: string;
   title: string;
   type: string;
+  categories: ProjectCategory[];
   summary: string;
   challenge: string;
   stackLine: string;
@@ -65,4 +73,9 @@ export interface ProjectEntry {
   liveUrl?: string;
   images?: ProjectImage[];
   isMira?: boolean;
+}
+
+export interface ProjectFilter {
+  id: 'all' | ProjectCategory;
+  label: string;
 }

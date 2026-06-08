@@ -1,7 +1,6 @@
 // REFACTORED
 import type { AboutContent } from '../../data/types';
 import ScrollReveal from '../ScrollReveal';
-import SectionWrapper from '../SectionWrapper';
 import styles from './About.module.css';
 
 interface AboutProps {
@@ -9,27 +8,23 @@ interface AboutProps {
 }
 
 const About = ({ content }: AboutProps) => (
-  <SectionWrapper id="about" eyebrow={content.eyebrow} title={content.title}>
-    <div className={styles.layout}>
-      <div className={styles.body}>
-        {content.body.map((paragraph, index) => (
-          <ScrollReveal key={paragraph} delay={index * 120}>
-            <p className={styles.paragraph}>{paragraph}</p>
-          </ScrollReveal>
-        ))}
-      </div>
-      <ScrollReveal delay={160}>
-        <dl className={styles.facts}>
-          {content.facts.map((fact) => (
-            <div key={fact.label} className={styles.factItem}>
-              <dt className={styles.factLabel}>{fact.label}</dt>
-              <dd className={styles.factValue}>{fact.value}</dd>
-            </div>
-          ))}
-        </dl>
+  <section id="about" className={styles.section}>
+    <div className={styles.inner}>
+      <p className={styles.label}>{content.eyebrow}</p>
+      <ScrollReveal className={styles.text}>
+        <p className={styles.greeting}>
+          {content.greetingLead}
+          <em className={styles.emphasis}>{content.greetingEmphasis}</em>
+          {content.greetingTrail}
+        </p>
+        <p className={styles.experience}>
+          {content.experienceLead}
+          <em className={styles.emphasis}>{content.experienceEmphasis}</em>
+          {content.experienceTrail}
+        </p>
       </ScrollReveal>
     </div>
-  </SectionWrapper>
+  </section>
 );
 
 export default About;

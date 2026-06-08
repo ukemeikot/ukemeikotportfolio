@@ -24,6 +24,11 @@
   margin: 0 auto;
 }
 
+/* No media → a single, centered content column. */
+.layoutSolo {
+  width: min(100%, 52rem);
+}
+
 .type {
   margin: 0 0 var(--space-3);
   color: var(--color-accent);
@@ -114,16 +119,6 @@
   width: 100%;
   height: auto;
   border-radius: 1.5rem;
-}
-
-.placeholder {
-  display: grid;
-  place-items: center;
-  min-height: 20rem;
-  border: 1px dashed var(--color-border);
-  border-radius: var(--radius-xl);
-  color: var(--color-text-muted);
-  font: var(--type-body);
 }
 
 .desktopMockup {
@@ -441,6 +436,10 @@
   .layout {
     grid-template-columns: minmax(0, 1fr) minmax(24rem, 0.95fr);
     align-items: start;
+  }
+
+  .layoutSolo {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .desktopBody {

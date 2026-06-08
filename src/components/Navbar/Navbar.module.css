@@ -1,9 +1,8 @@
 /* REFACTORED */
 .navbar {
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 40;
-  padding: var(--space-4) var(--space-6);
+  padding: var(--space-5) clamp(var(--space-5), 4vw, var(--space-8));
   transition:
     padding var(--transition-base),
     border-color var(--transition-base),
@@ -14,8 +13,8 @@
 .condensed {
   padding-top: var(--space-3);
   padding-bottom: var(--space-3);
-  backdrop-filter: blur(12px);
-  background: color-mix(in srgb, var(--color-bg) 88%, transparent);
+  backdrop-filter: blur(14px);
+  background: color-mix(in srgb, var(--color-bg) 82%, transparent);
   border-bottom: 1px solid var(--color-border);
 }
 
@@ -41,33 +40,76 @@
 
 .brand {
   display: inline-flex;
+  flex-direction: row;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-3);
+  line-height: 1.05;
   font-family: var(--font-display);
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
-.brandMark {
-  color: var(--color-accent);
+.brandAvatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center top;
+  border: 1px solid var(--color-border-strong);
+  filter: grayscale(1) contrast(1.05);
+  transition: filter var(--transition-base), transform var(--transition-base);
+}
+
+.brand:hover .brandAvatar {
+  filter: grayscale(0);
+  transform: scale(1.05);
+}
+
+.brandText {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.brandName {
+  display: block;
 }
 
 .desktopNav {
   display: none;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-2);
 }
 
 .link {
+  position: relative;
   padding: var(--space-2) var(--space-3);
   color: var(--color-text-muted);
   font: var(--type-label);
   transition: color var(--transition-fast);
 }
 
+.link::after {
+  content: '';
+  position: absolute;
+  left: var(--space-3);
+  right: var(--space-3);
+  bottom: 0.25rem;
+  height: 1px;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--transition-base);
+}
+
 .link:hover,
 .overlayLink:hover {
   color: var(--color-text-primary);
+}
+
+.link:hover::after {
+  transform: scaleX(1);
 }
 
 .actions {
@@ -84,29 +126,39 @@
   width: 2.75rem;
   height: 2.75rem;
   border: 1px solid var(--color-border);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   color: var(--color-text-primary);
-  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+  background: var(--color-surface);
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.themeToggle:hover,
+.mobileMenu:hover {
+  border-color: var(--color-border-strong);
+  transform: translateY(-1px);
 }
 
 .overlay {
   position: fixed;
-  inset: 4.75rem var(--space-4) auto;
+  inset: 5.5rem var(--space-5) auto;
   z-index: 35;
   display: grid;
-  gap: var(--space-3);
+  gap: var(--space-2);
   padding: var(--space-5);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
-  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
-  backdrop-filter: blur(16px);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--color-surface) 96%, transparent);
+  backdrop-filter: blur(18px);
 }
 
 .overlayLink {
   padding: var(--space-3);
   text-align: left;
   font-family: var(--font-display);
-  font-size: 1.25rem;
+  font-size: 1.15rem;
 }
 
 @media (min-width: 48rem) {
