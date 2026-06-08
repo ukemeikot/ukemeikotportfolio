@@ -18,15 +18,31 @@ const filters: ProjectFilter[] = [
   { id: 'devops', label: 'DevOps' },
 ];
 
+// Lead the grid with one of each discipline: Backend, Frontend, Mobile, DevOps.
+const FEATURED_ORDER = [
+  'messaging-calling-backend',
+  'mira-care',
+  'crednews-newsroom',
+  'swiftdeploy',
+];
+
 const ProjectGrid = ({ projects, onOpen }: ProjectGridProps) => {
   const [active, setActive] = useState<'all' | ProjectCategory>('all');
+
+  const ordered = useMemo(() => {
+    const rank = (slug: string) => {
+      const index = FEATURED_ORDER.indexOf(slug);
+      return index === -1 ? FEATURED_ORDER.length : index;
+    };
+    return [...projects].sort((a, b) => rank(a.slug) - rank(b.slug));
+  }, [projects]);
 
   const visible = useMemo(
     () =>
       active === 'all'
-        ? projects
-        : projects.filter((project) => project.categories.includes(active as ProjectCategory)),
-    [active, projects]
+        ? ordered
+        : ordered.filter((project) => project.categories.includes(active as ProjectCategory)),
+    [active, ordered]
   );
 
   return (
@@ -36,14 +52,14 @@ const ProjectGrid = ({ projects, onOpen }: ProjectGridProps) => {
       title="Selected work across the stack."
       intro="Frontend, mobile, backend, and DevOps — filter by the layer you care about."
     >
-      <TechConstellation projects={projects} onOpen={onOpen} />
+      <TechConstellation projects={ordered} onOpen={onOpen} />
 
       <div className={styles.filters} role="tablist" aria-label="Filter projects by category">
         {filters.map((filter) => {
           const count =
             filter.id === 'all'
-              ? projects.length
-              : projects.filter((project) =>
+              ? ordered.length
+              : ordered.filter((project) =>
                   project.categories.includes(filter.id as ProjectCategory)
                 ).length;
           return (

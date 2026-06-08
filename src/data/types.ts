@@ -58,6 +58,16 @@ export interface ProjectImage {
 
 export type ProjectCategory = 'frontend-mobile' | 'backend' | 'devops';
 
+export interface ProjectCaseStudy {
+  problem: string;
+  architecture: string;
+  modules: Array<{ name: string; detail: string }>;
+  challenge: {
+    title: string;
+    solution: string;
+  };
+}
+
 export interface ProjectEntry {
   slug: string;
   title: string;
@@ -73,6 +83,7 @@ export interface ProjectEntry {
   liveUrl?: string;
   images?: ProjectImage[];
   isMira?: boolean;
+  caseStudy?: ProjectCaseStudy;
 }
 
 export interface ProjectFilter {

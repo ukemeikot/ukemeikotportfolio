@@ -152,6 +152,7 @@ const MiraDesktopMockup = () => (
 
 const ProjectDetail = ({ project, onClose }: ProjectDetailProps) => {
   const hasMedia = Boolean(project.isMira) || Boolean(project.images?.length);
+  const caseStudy = project.caseStudy;
 
   return (
   <div className={styles.page}>
@@ -169,6 +170,36 @@ const ProjectDetail = ({ project, onClose }: ProjectDetailProps) => {
           <p><strong>Technical challenge:</strong> {project.challenge}</p>
           <p>{project.impact}</p>
         </div>
+
+        {caseStudy ? (
+          <div className={styles.caseStudy}>
+            <section className={styles.csBlock}>
+              <h2 className={styles.csHeading}>The problem</h2>
+              <p className={styles.csText}>{caseStudy.problem}</p>
+            </section>
+            <section className={styles.csBlock}>
+              <h2 className={styles.csHeading}>Architecture &amp; request flow</h2>
+              <p className={styles.csText}>{caseStudy.architecture}</p>
+            </section>
+            <section className={styles.csBlock}>
+              <h2 className={styles.csHeading}>Key modules &amp; endpoints</h2>
+              <ul className={styles.csModules}>
+                {caseStudy.modules.map((module) => (
+                  <li key={module.name} className={styles.csModule}>
+                    <code className={styles.csModuleName}>{module.name}</code>
+                    <span className={styles.csModuleDetail}>{module.detail}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+            <section className={styles.csBlock}>
+              <h2 className={styles.csHeading}>Technical challenge</h2>
+              <p className={styles.csChallengeTitle}>{caseStudy.challenge.title}</p>
+              <p className={styles.csText}>{caseStudy.challenge.solution}</p>
+            </section>
+          </div>
+        ) : null}
+
         <div className={styles.techList}>
           {project.tech.map((tech) => (
             <span key={tech} className={styles.tech}>

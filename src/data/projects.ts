@@ -20,6 +20,25 @@ export const projects: ProjectEntry[] = [
       'Mira Care pairs a Next.js dashboard with a React Native mobile experience to support clinicians and care teams working from live patient signals. The system handles realtime updates, collaborative task management, and intelligent notifications while protecting sensitive data with strong access control and encryption. The product architecture was shaped around fast data access, low-latency streams, and offline resilience for healthcare workers who cannot depend on perfect connectivity.',
     tech: ['Next.js', 'React Native', 'TypeScript', 'WebSocket', 'PostgreSQL', 'Redis', 'AI/ML Integration', 'HIPAA Compliance'],
     repoUrl: 'https://github.com/ukemeikot/mira-fe',
+    caseStudy: {
+      problem:
+        'Care teams need a fast, role-aware web app to coordinate patients: admins manage agents, appointments, calendars, EHR and team invites, while frontline workers run a live patient queue and activity feed. The frontend had to deliver two distinct role experiences, secure multi-step auth, and a structure that stays maintainable as features grow.',
+      architecture:
+        'A Next.js App Router app in TypeScript and Tailwind. Route groups separate concerns cleanly: (auth) holds login, signup, email verification, password reset and invite-acceptance flows, while (Dashboard)/admin and (Dashboard)/workers are the two role surfaces with their own layouts and navigation. A typed api-client sits beneath a per-domain API layer (patients, appointments, teams, calls, EHR and calendar integrations, analytics). Auth lives in a dedicated store with use-auth and use-auth-bootstrap hooks behind a ProtectedRoute guard. Quality is enforced with Husky pre-commit/pre-push hooks and GitHub Actions, and the app is served with PM2.',
+      modules: [
+        { name: 'app/(auth)', detail: 'Login, signup, verify-email, reset-password and accept-invite flows.' },
+        { name: 'app/(Dashboard)/admin', detail: 'Agents, appointments, calendar, EHR, patients, team management and settings.' },
+        { name: 'app/(Dashboard)/workers', detail: 'Activity feed, appointments and a live patient queue.' },
+        { name: 'app/lib/api/*', detail: 'Typed per-domain API modules over a single shared api-client.' },
+        { name: 'app/stores/auth-store.ts', detail: 'Auth state with use-auth, use-auth-bootstrap and a ProtectedRoute guard.' },
+        { name: 'components', detail: 'Reusable modals (patients, appointments, teams) and dashboard widgets (stat cards, charts, queue cards).' },
+      ],
+      challenge: {
+        title: 'Two products in one app, with no protected-content flash on reload',
+        solution:
+          'Admin and worker are effectively two apps sharing one codebase. App Router route groups give each role its own layout, navigation and access boundary while reusing the same component library, typed api-client and auth store. The harder detail was session rehydration: on a hard refresh the app must restore the session before rendering, or protected screens flash and trigger redirect loops. A use-auth-bootstrap hook rehydrates auth into the store first, and ProtectedRoute holds rendering until bootstrap resolves — so the correct dashboard appears once, cleanly, with no flash.',
+      },
+    },
   },
   {
     slug: 'crednews-newsroom',
@@ -39,6 +58,25 @@ export const projects: ProjectEntry[] = [
     tech: ['React Native', 'Expo', 'TypeScript', 'TanStack Query', 'Firebase', 'Electron', 'React Native Web', 'Gemini AI'],
     liveUrl: 'https://mobile.hng.credianlab.xyz/',
     repoUrl: 'https://github.com/ukemeikot/newsroom',
+    caseStudy: {
+      problem:
+        'News consumption is fragmented across apps and devices, and most apps degrade badly on poor connections. CredNews unifies a fast headlines feed, tech-event discovery, offline saved reading, community fact-checking, and a streaming AI assistant — and runs on iOS, Android, web, and Windows desktop from a single codebase.',
+      architecture:
+        'One React Native (Expo) source compiles to every target: mobile, web via Expo Web and React Native Web, and desktop via Electron 41 wrapping the exported web bundle. Expo Router drives a single navigation tree — tabbed feed, events, saved and search, an article/[id] detail route, auth flows, and an interests modal that overlays in place. TanStack Query is the unified cache, persisted to AsyncStorage so feed, search results and AI briefs survive restarts; a pending-actions queue stores comments, votes and evidence uploads and replays them on reconnect via expo-network. Firebase (Auth, Firestore, Storage) backs accounts and community data, and the layout adapts by width — bottom tabs under 768px, top navigation above.',
+      modules: [
+        { name: 'src/app/(tabs)', detail: 'Expo Router feed, events, saved and search screens shared across platforms.' },
+        { name: 'src/api/aiProviders/*', detail: 'Groq, Cerebras and OpenRouter backends plus geminiApi, with streaming and prompting utilities.' },
+        { name: 'src/hooks/queries/*', detail: 'useNewsQueries, useEventsQuery and useAiBriefQuery built on TanStack Query.' },
+        { name: 'src/services/pendingActionsService.ts', detail: 'Offline action queue that replays comments, votes and uploads on reconnect.' },
+        { name: 'src/components/community + evidence', detail: 'Comments, voting and evidence attachments for community fact-checking.' },
+        { name: 'desktop/main.cjs', detail: 'Electron shell with native menus and app:// protocol handling.' },
+      ],
+      challenge: {
+        title: 'Staying responsive under free-tier AI rate limits',
+        solution:
+          'A single AI provider on a free tier rate-limits almost immediately. CredNews rotates round-robin across four providers — Groq (fastest), Cerebras (quality), OpenRouter (free routes) and Gemini — with per-provider cooldowns when one returns 429 or errors, pooling roughly 80 requests/minute of free capacity. Responses stream via SSE over XHR and render character-by-character at about 125 chars/second, so even an instant reply feels like natural typing. On desktop, excluding node_modules from the Electron package kept the installer near 99 MB instead of 800 MB+.',
+      },
+    },
   },
   {
     slug: 'noramum-app',
@@ -96,6 +134,26 @@ export const projects: ProjectEntry[] = [
     tech: ['Python', 'FastAPI', 'PostgreSQL', 'JWT', 'Google OAuth', 'WebSockets', 'Full-Text Search', 'CLI', 'Pytest'],
     liveUrl: 'https://messagingandcallingbackend.credianlab.xyz/',
     repoUrl: 'https://github.com/ukemeikot/messaging_and_calling_backend',
+    caseStudy: {
+      problem:
+        'Almost every product that needs chat or calling rebuilds the same backend from scratch — authentication, contacts, presence, message storage, call signalling, and search. I packaged all of it into a single installable FastAPI SDK, with a CLI that scaffolds a new project, so a team can stand up a production communication layer in minutes instead of reassembling the same primitives every time.',
+      architecture:
+        'It is a layered FastAPI application. Requests enter the versioned API surface — REST routers under /api/v1 plus a WebSocket signalling endpoint — then pass through JWT authentication and dependency-injected context (core/security.py, core/dependencies.py). From there they hand off to a service layer (chat, call, contact, search, profile, OAuth, and email services) that owns the business logic. Services persist asynchronously to PostgreSQL via asyncpg, with Alembic managing schema migrations, while Pydantic schemas validate every request and response. A dedicated websocket_manager tracks live connections so messages and call events are delivered in real time.',
+      modules: [
+        { name: 'auth · /api/v1/auth', detail: 'JWT register/login and current-user, plus email verification, password reset, and Google OAuth.' },
+        { name: 'chat · /api/v1/chat', detail: 'Direct and group messaging with read receipts, backed by chat_service.' },
+        { name: 'calls · /api/v1/calls', detail: 'Call lifecycle management handled by call_service.' },
+        { name: 'websocket_signaling', detail: 'Real-time messaging and WebRTC-style call signalling over a managed WebSocket layer.' },
+        { name: 'search · /api/v1/search', detail: 'PostgreSQL full-text search across users, messages, conversations, and global queries.' },
+        { name: 'contacts & profile', detail: 'Contact requests with blocking, plus profile management and picture uploads.' },
+        { name: 'cli', detail: 'Scaffolds and configures a new FastAPI project from the SDK.' },
+      ],
+      challenge: {
+        title: 'Authorising real-time connections, not just REST calls',
+        solution:
+          'A signalling WebSocket is easy to get wrong: with only a valid token, anyone could try to join another call’s signalling room and eavesdrop on or inject SDP/ICE messages. REST auth alone does not cover this. I made signalling access depend on real call participation — when a socket connects to a call’s channel it is checked against that call’s participant records before the websocket_manager registers it, so only verified participants can exchange signalling traffic. Membership is enforced at connection time rather than per message, keeping the hot path cheap.',
+      },
+    },
   },
   {
     slug: 'insighta-genderise-api',
@@ -171,6 +229,26 @@ export const projects: ProjectEntry[] = [
       'SwiftDeploy turns a single YAML manifest into all deployment artifacts — docker-compose.yml, nginx.conf, and OPA policies — via Jinja2 templating. Two OPA-enforced gates (infrastructure resources and canary safety on error rates/latency) prevent unsafe promotions. A /chaos endpoint simulates degraded conditions in canary mode, observability comes from a live dashboard and Prometheus metrics, and audit trails are kept as append-only JSON logs. OPA runs on an internal-only network while only Nginx faces the public port, and stable/canary modes switch without downtime.',
     tech: ['Python', 'Flask', 'Jinja2', 'Docker Compose', 'Nginx', 'OPA', 'Prometheus', 'YAML'],
     repoUrl: 'https://github.com/ukemeikot/swiftdeploy',
+    caseStudy: {
+      problem:
+        'Shipping a containerised web stack usually means hand-writing and constantly re-syncing several config files — a Compose file, an Nginx config, and policy rules — which drift apart and quietly let unsafe deploys through. SwiftDeploy makes one manifest.yaml the single source of truth, generates everything else from it, and refuses to deploy or promote unless explicit policy gates pass.',
+      architecture:
+        'A three-layer model. The user layer is a single manifest.yaml (services, nginx, network, thresholds). The generation layer is a Python CLI that uses Jinja2 to render docker-compose.yml, nginx.conf, and opa-data.json on every init. The runtime layer is Docker Compose running a Flask API and Nginx on a public network, with an Open Policy Agent sidecar isolated on an internal policy network bound to 127.0.0.1:8181. "swiftdeploy deploy" scrapes host stats and asks OPA for an infrastructure decision; on ALLOW it brings the stack up and polls /healthz, on DENY it prints the violation and exits. "promote canary" scrapes /metrics twice across a window, computes error rate and p99 latency, then queries the canary-safety policy.',
+      modules: [
+        { name: 'deploy', detail: 'Runs the infrastructure gate, starts the stack, then health-checks /healthz before declaring success.' },
+        { name: 'promote', detail: 'Switches stable/canary modes; promoting to canary must clear the canary-safety gate first.' },
+        { name: 'validate', detail: 'Five pre-flight checks (images, ports, config syntax) before anything runs.' },
+        { name: 'status · dashboard.py', detail: 'Live terminal dashboard that scrapes /metrics on an interval and appends each reading to history.jsonl.' },
+        { name: 'audit', detail: 'Renders history.jsonl into a Markdown report: timeline, policy violations, and forced overrides.' },
+        { name: 'opa.py', detail: 'HTTP client that wraps every allow/deny decision from the OPA sidecar in typed dataclasses.' },
+        { name: 'app · /chaos', detail: 'Canary-only endpoint that injects slow or error responses to test the safety gates.' },
+      ],
+      challenge: {
+        title: 'Making deploy/promote decisions trustworthy and tamper-evident',
+        solution:
+          'The CLI never decides allow/deny on its own — it always queries the OPA sidecar, and all thresholds live only in the manifest (rendered to opa-data.json), so the Rego policies contain no hardcoded numbers and changing a limit is a manifest edit plus init, not a code change. The canary gate compares the change in error rate and p99 over a fixed window rather than absolute values, isolating the canary’s behaviour from long-term drift. OPA is bound to localhost on an internal-only Docker network so it is unreachable from outside, and every emergency --force override is appended to history.jsonl, leaving a complete audit trail of who overrode what and when.',
+      },
+    },
   },
   {
     slug: 'hng-stage2-devops',
