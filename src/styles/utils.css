@@ -18,6 +18,49 @@
   isolation: isolate;
 }
 
+/* A bright light continuously orbiting the card's outer border. */
+@property --card-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.site-card-ring {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+  padding: 1.5px;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--card-angle),
+    transparent 0deg 210deg,
+    color-mix(in srgb, var(--color-accent) 40%, transparent) 290deg,
+    var(--color-accent) 335deg,
+    var(--color-text-primary) 350deg,
+    transparent 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: card-orbit 6s linear infinite;
+}
+
+@keyframes card-orbit {
+  to {
+    --card-angle: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-card-ring {
+    animation: none;
+    background: none;
+  }
+}
+
 /* Faint corner glow rings echoing the reference's decorative circles. */
 .site-card::before,
 .site-card::after {

@@ -84,6 +84,7 @@ const App = () => {
     return (
       <div className="app-shell">
         <div className="site-card">
+          <span className="site-card-ring" aria-hidden="true" />
           <Navbar
             items={navItems}
             onNavigate={handleNavigate}
@@ -99,6 +100,7 @@ const App = () => {
   return (
     <div className="app-shell">
       <div className="site-card">
+        <span className="site-card-ring" aria-hidden="true" />
         <Navbar
           items={navItems}
           onNavigate={handleNavigate}
