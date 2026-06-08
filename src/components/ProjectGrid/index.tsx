@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import type { ProjectCategory, ProjectEntry, ProjectFilter } from '../../data/types';
 import ProjectCard from '../ProjectCard';
 import SectionWrapper from '../SectionWrapper';
+import TechConstellation from '../TechConstellation';
 import styles from './ProjectGrid.module.css';
 
 interface ProjectGridProps {
@@ -35,6 +36,8 @@ const ProjectGrid = ({ projects, onOpen }: ProjectGridProps) => {
       title="Selected work across the stack."
       intro="Frontend, mobile, backend, and DevOps — filter by the layer you care about."
     >
+      <TechConstellation projects={projects} onOpen={onOpen} />
+
       <div className={styles.filters} role="tablist" aria-label="Filter projects by category">
         {filters.map((filter) => {
           const count =

@@ -24,6 +24,7 @@ import type { ProjectEntry } from './data/types';
 const About = lazy(() => import('./components/About'));
 const Articles = lazy(() => import('./components/Articles'));
 const ExperienceTimeline = lazy(() => import('./components/ExperienceTimeline'));
+const Playground = lazy(() => import('./components/Playground'));
 const ProjectGrid = lazy(() => import('./components/ProjectGrid'));
 
 const App = () => {
@@ -119,6 +120,9 @@ const App = () => {
           </Suspense>
           <Suspense fallback={null}>
             <ExperienceTimeline items={experience} />
+          </Suspense>
+          <Suspense fallback={null}>
+            <Playground />
           </Suspense>
           <SectionWrapper
             id="contact"
