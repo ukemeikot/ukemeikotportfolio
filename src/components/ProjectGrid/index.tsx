@@ -18,8 +18,9 @@ const filters: ProjectFilter[] = [
   { id: 'devops', label: 'DevOps' },
 ];
 
-// Lead the grid with one of each discipline: Backend, Frontend, Mobile, DevOps.
+// FitCall (flagship, full-stack) leads, then one of each discipline.
 const FEATURED_ORDER = [
+  'fitcall',
   'messaging-calling-backend',
   'mira-care',
   'crednews-newsroom',

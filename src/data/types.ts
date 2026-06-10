@@ -59,13 +59,17 @@ export interface ProjectImage {
 export type ProjectCategory = 'frontend-mobile' | 'backend' | 'devops';
 
 export interface ProjectCaseStudy {
+  intro?: string;
   problem: string;
   architecture: string;
-  modules: Array<{ name: string; detail: string }>;
+  diagram?: string;
+  modules?: Array<{ name: string; detail: string }>;
+  contributions?: Array<{ area: string; items: string[] }>;
   challenge: {
     title: string;
     solution: string;
   };
+  links?: Array<{ label: string; href: string }>;
 }
 
 export interface ProjectEntry {

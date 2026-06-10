@@ -1,8 +1,8 @@
 /* REFACTORED — monochrome design system */
 :root {
-  --font-display: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
-  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
-  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Space Mono', ui-monospace, 'SFMono-Regular', monospace;
+  --font-mono: 'Space Mono', ui-monospace, 'SFMono-Regular', monospace;
+  --font-body: 'Space Grotesk', system-ui, -apple-system, sans-serif;
 
   --space-1: 0.25rem;
   --space-2: 0.5rem;
@@ -21,6 +21,7 @@
   --radius-lg: 1.75rem;
   --radius-xl: 2.5rem;
   --radius-pill: 999px;
+  --card-radius: clamp(1.25rem, 3vw, 2.5rem);
 
   --content-max: 74rem;
   --transition-fast: 180ms ease;

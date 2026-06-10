@@ -2,6 +2,89 @@
 import type { ProjectEntry } from './types';
 
 export const projects: ProjectEntry[] = [
+  // ---------- FitCall (flagship, full-stack + QA) ----------
+  {
+    slug: 'fitcall',
+    title: 'FitCall',
+    type: 'Full-Stack Fitness Platform',
+    categories: ['backend', 'frontend-mobile', 'devops'],
+    summary:
+      'A personal-training marketplace where clients discover trainers, book sessions, subscribe, and meet over video — live on the web (fitcall.me) and Android. I worked across the Go backend, the React Native app, and the QA automation suite.',
+    challenge:
+      'Delivering real payments, real-time notifications, and video booking across web and mobile — with three teams shipping on protected dev/staging/prod branches without breaking each other.',
+    stackLine:
+      'Stack: Go, Gin, PostgreSQL, Redis, React Native, Expo, TypeScript, Apple StoreKit 2, Google IAP, FCM, Postman/Newman, AWS EC2, Nginx, GitHub Actions.',
+    impact:
+      'Impact: a live product (fitcall.me + Google Play) with tamper-evident Apple/Google purchases, push and booking reminders, video sessions, a stabilized regression suite, and automated deploys to AWS.',
+    details:
+      'FitCall connects clients with personal trainers and lets them book and meet over video. It ships as a web app and a React Native Android app on top of a Go (Gin) API. Unusually, I contributed to all four repositories — backend, mobile, QA, and DevOps — so my work on it spans server-side payments and notifications, mobile product flows, the automated testing that keeps it stable, and the deployment that ships it.',
+    tech: ['Go', 'Gin', 'PostgreSQL', 'Redis', 'React Native', 'Expo', 'TypeScript', 'StoreKit 2', 'FCM', 'Postman', 'AWS EC2', 'Nginx', 'GitHub Actions'],
+    liveUrl: 'https://fitcall.me',
+    repoUrl: 'https://github.com/hngprojects/personal-trainer-be',
+    caseStudy: {
+      intro:
+        'FitCall is a personal-training marketplace: clients discover a trainer, book a slot, subscribe, and meet over video. It ships as a web app at fitcall.me and an Android app on Google Play, backed by a Go API. I rarely get to point at one product and say I touched the backend, the mobile app, the test suite, and the deployment — on FitCall I did all four, so this is a rare end-to-end look at one product, from API to app to tests to the servers it runs on.',
+      problem:
+        'Connecting people with trainers is the easy part; making the loop trustworthy is not. FitCall had to handle the whole journey — discover, book, pay/subscribe, and join a call — across web and mobile, with the seriousness of real money (Apple and Google in-app purchases), real-time notifications, and secure authentication. Three teams (backend, mobile, QA) had to move quickly on protected branches that require multiple approvals before staging or production.',
+      architecture:
+        'A Go (Gin) backend exposes a versioned REST API over PostgreSQL, with Redis caching booking availability. Two clients consume it: a React Native (Expo) Android app and the fitcall.me web app. The backend fans out to a stack of external services — Apple Sign-In and StoreKit 2, Google in-app purchases, Google Meet for sessions, Firebase Cloud Messaging for push, and Resend for email — while a Postman/Newman suite runs regression flows against staging. The server follows layered clean architecture (handlers → services → repositories → domain), and dev/staging/prod branches are protected behind two-approval reviews. It all runs on a single AWS EC2 (Ubuntu) host: Nginx terminates TLS and reverse-proxies the web frontend and Go API, systemd manages the services, and GitHub Actions deploys via a non-privileged deploybot user — with staging and production running side by side (frontend 3001/3002, backend 4001/4002).',
+      diagram: 'fitcall',
+      contributions: [
+        {
+          area: 'Backend · Go / Gin',
+          items: [
+            'Implemented Sign in with Apple — verifying identity tokens against Apple’s JWKS and storing a stable apple_user_id as the lookup key.',
+            'Migrated in-app purchases to Apple StoreKit 2 with offline JWS signature verification against a pinned Apple Root CA G3, replacing the deprecated verifyReceipt flow.',
+            'Built the in-app notification system: admin broadcast fan-out, event hooks for bookings/subscriptions/trainer creation, WebSocket diagnostics (RFC 6455 validation), FCM fallback with dead-token auto-deactivation, and 30-minute booking reminders.',
+            'Added slot-availability filtering with date-pinned queries, Redis cache invalidation, and timezone normalization.',
+            'Integrated Google Meet and Messenger as booking/meeting channels (org-account OAuth, a bootstrap CLI, and operator docs).',
+            'Fixed a critical security regression by restoring bcrypt validation on login, and hardened migrations with information_schema guards.',
+          ],
+        },
+        {
+          area: 'Mobile · React Native / Expo',
+          items: [
+            'Built the “Request a Call” three-step booking flow.',
+            'Built the media system for video and image uploads — media selection, upload, and media-driven video/image content across the home and trainer screens (PR #34).',
+            'Shipped onboarding and home screens, the updated trainer UI, and auth/home polish.',
+            'Added push notifications.',
+            'Wired the app UI to the backend APIs and set up the Android release pipeline, CI (debug APKs to Appetize), and splash-screen flow.',
+          ],
+        },
+        {
+          area: 'QA · Postman / Newman',
+          items: [
+            'Stabilized the automated API regression suite — fixed auth and environment-variable wiring that was failing the entire run.',
+            'Repaired API request definitions for Newman and hardened assertions against non-JSON responses.',
+            'Built automated failure triage (backend bug / known gap / environment / test data) and documented defects (FC-BUG-001…007).',
+          ],
+        },
+        {
+          area: 'DevOps · AWS / CI-CD',
+          items: [
+            'Set up deployment on a single AWS EC2 (Ubuntu) host running staging and production side by side (frontend 3001/3002, backend 4001/4002, FitCall service on 8080).',
+            'Automated releases with GitHub Actions deploying through a non-privileged deploybot user, with systemd managing the long-running services.',
+            'Configured Nginx as the reverse proxy with TLS termination in front of the Go API and the web frontend.',
+            'Ran PostgreSQL and Redis on the host and wired environment-specific configuration across tiers.',
+          ],
+        },
+      ],
+      challenge: {
+        title: 'Trusting in-app purchases without trusting the network',
+        solution:
+          'Receipt validation is where fitness apps quietly lose money — a spoofed receipt can grant a free subscription. I moved Apple IAP to StoreKit 2 and verified the signed transaction (JWS) offline against a pinned Apple Root CA G3 certificate chain, instead of calling Apple’s deprecated verifyReceipt endpoint. That removed a network round-trip from the purchase path and made verification tamper-evident and resilient to endpoint outages. The same rigor carried into Sign in with Apple, where identity tokens are validated against Apple’s JWKS before an account is ever created.',
+      },
+      links: [
+        { label: 'Live · fitcall.me', href: 'https://fitcall.me' },
+        { label: 'Google Play', href: 'https://play.google.com/store/apps/details?id=net.emerj.fitcall' },
+        { label: 'Backend repo', href: 'https://github.com/hngprojects/personal-trainer-be' },
+        { label: 'Mobile repo', href: 'https://github.com/hngprojects/personal-trainer-mobile-rn' },
+        { label: 'QA repo', href: 'https://github.com/hngprojects/personal-trainer-qa' },
+        { label: 'DevOps repo', href: 'https://github.com/hngprojects/personal-trainer-devops' },
+      ],
+    },
+  },
+
   // ---------- Frontend & Mobile ----------
   {
     slug: 'mira-care',

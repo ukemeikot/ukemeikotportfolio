@@ -1,8 +1,11 @@
 /* REFACTORED */
 .navbar {
-  position: relative;
+  position: sticky;
+  top: 0;
   z-index: 40;
   padding: var(--space-5) clamp(var(--space-5), 4vw, var(--space-8));
+  border-top-left-radius: var(--card-radius);
+  border-top-right-radius: var(--card-radius);
   transition:
     padding var(--transition-base),
     border-color var(--transition-base),
@@ -14,7 +17,7 @@
   padding-top: var(--space-3);
   padding-bottom: var(--space-3);
   backdrop-filter: blur(14px);
-  background: color-mix(in srgb, var(--color-bg) 82%, transparent);
+  background: color-mix(in srgb, var(--color-bg) 88%, transparent);
   border-bottom: 1px solid var(--color-border);
 }
 

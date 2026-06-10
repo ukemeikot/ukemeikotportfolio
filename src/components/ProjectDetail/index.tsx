@@ -14,6 +14,7 @@ import {
   Users,
 } from 'lucide-react';
 import type { ProjectEntry } from '../../data/types';
+import CaseStudyDiagram from '../CaseStudyDiagram';
 import styles from './ProjectDetail.module.css';
 
 interface ProjectDetailProps {
@@ -173,30 +174,81 @@ const ProjectDetail = ({ project, onClose }: ProjectDetailProps) => {
 
         {caseStudy ? (
           <div className={styles.caseStudy}>
+            {caseStudy.intro ? <p className={styles.csIntro}>{caseStudy.intro}</p> : null}
+
             <section className={styles.csBlock}>
               <h2 className={styles.csHeading}>The problem</h2>
               <p className={styles.csText}>{caseStudy.problem}</p>
             </section>
+
             <section className={styles.csBlock}>
               <h2 className={styles.csHeading}>Architecture &amp; request flow</h2>
               <p className={styles.csText}>{caseStudy.architecture}</p>
             </section>
-            <section className={styles.csBlock}>
-              <h2 className={styles.csHeading}>Key modules &amp; endpoints</h2>
-              <ul className={styles.csModules}>
-                {caseStudy.modules.map((module) => (
-                  <li key={module.name} className={styles.csModule}>
-                    <code className={styles.csModuleName}>{module.name}</code>
-                    <span className={styles.csModuleDetail}>{module.detail}</span>
-                  </li>
-                ))}
-              </ul>
-            </section>
+
+            {caseStudy.diagram ? (
+              <section className={styles.csBlock}>
+                <h2 className={styles.csHeading}>Architecture diagram</h2>
+                <CaseStudyDiagram id={caseStudy.diagram} />
+              </section>
+            ) : null}
+
+            {caseStudy.contributions?.length ? (
+              <section className={styles.csBlock}>
+                <h2 className={styles.csHeading}>What I built</h2>
+                <div className={styles.csContribs}>
+                  {caseStudy.contributions.map((group) => (
+                    <div key={group.area} className={styles.csContribGroup}>
+                      <h3 className={styles.csContribArea}>{group.area}</h3>
+                      <ul className={styles.csContribList}>
+                        {group.items.map((item) => (
+                          <li key={item} className={styles.csContribItem}>
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            ) : null}
+
+            {caseStudy.modules?.length ? (
+              <section className={styles.csBlock}>
+                <h2 className={styles.csHeading}>Key modules &amp; endpoints</h2>
+                <ul className={styles.csModules}>
+                  {caseStudy.modules.map((module) => (
+                    <li key={module.name} className={styles.csModule}>
+                      <code className={styles.csModuleName}>{module.name}</code>
+                      <span className={styles.csModuleDetail}>{module.detail}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
+
             <section className={styles.csBlock}>
               <h2 className={styles.csHeading}>Technical challenge</h2>
               <p className={styles.csChallengeTitle}>{caseStudy.challenge.title}</p>
               <p className={styles.csText}>{caseStudy.challenge.solution}</p>
             </section>
+
+            {caseStudy.links?.length ? (
+              <div className={styles.csLinks}>
+                {caseStudy.links.map((link) => (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={styles.csLink}
+                  >
+                    {link.label}
+                    <ExternalLink size={13} />
+                  </a>
+                ))}
+              </div>
+            ) : null}
           </div>
         ) : null}
 
