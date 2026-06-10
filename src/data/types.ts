@@ -64,6 +64,7 @@ export interface ProjectCaseStudy {
   architecture: string;
   diagram?: string;
   modules?: Array<{ name: string; detail: string }>;
+  sections?: Array<{ heading: string; body: string }>;
   contributions?: Array<{ area: string; items: string[] }>;
   challenge: {
     title: string;

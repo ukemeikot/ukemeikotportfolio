@@ -227,6 +227,15 @@ const ProjectDetail = ({ project, onClose }: ProjectDetailProps) => {
               </section>
             ) : null}
 
+            {caseStudy.sections?.length
+              ? caseStudy.sections.map((section) => (
+                  <section key={section.heading} className={styles.csBlock}>
+                    <h2 className={styles.csHeading}>{section.heading}</h2>
+                    <p className={styles.csText}>{section.body}</p>
+                  </section>
+                ))
+              : null}
+
             <section className={styles.csBlock}>
               <h2 className={styles.csHeading}>Technical challenge</h2>
               <p className={styles.csChallengeTitle}>{caseStudy.challenge.title}</p>

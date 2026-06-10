@@ -1,5 +1,5 @@
 // REFACTORED
-import { Menu, MoonStar, SunMedium, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import avatarImg from '../../assets/ukeme.jpg';
 import type { NavItem } from '../../data/types';
@@ -8,11 +8,9 @@ import styles from './Navbar.module.css';
 interface NavbarProps {
   items: NavItem[];
   onNavigate: (id: string) => void;
-  theme: 'light' | 'dark' | null;
-  onToggleTheme: () => void;
 }
 
-const Navbar = ({ items, onNavigate, theme, onToggleTheme }: NavbarProps) => {
+const Navbar = ({ items, onNavigate }: NavbarProps) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [condensed, setCondensed] = useState(false);
 
@@ -47,13 +45,6 @@ const Navbar = ({ items, onNavigate, theme, onToggleTheme }: NavbarProps) => {
             ))}
           </div>
           <div className={styles.actions}>
-            <button
-              aria-label="Toggle color theme"
-              className={styles.themeToggle}
-              onClick={onToggleTheme}
-            >
-              {theme === 'light' ? <MoonStar size={18} /> : <SunMedium size={18} />}
-            </button>
             <button
               aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
               className={styles.mobileMenu}

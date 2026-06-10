@@ -45,11 +45,4 @@ export const articles: ArticleEntry[] = [
     url: 'https://medium.com/@ukemeetim2222/built-a-face-verification-liveness-detection-flow-for-a-react-native-expo-app-recently-and-i-ddcef1068b61',
     tag: 'Mobile',
   },
-  {
-    title: 'A Tiny Tool to Stop Developers From Committing Secrets',
-    excerpt:
-      'Every developer has that quiet fear — so I built a small guard against accidentally committing secrets.',
-    url: 'https://medium.com/@ukemeetim2222/i-built-a-tiny-tool-to-stop-developers-from-accidentally-committing-secrets-e3733d4ff626',
-    tag: 'DevOps',
-  },
 ];

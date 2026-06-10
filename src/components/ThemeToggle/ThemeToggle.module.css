@@ -1,0 +1,43 @@
+/* REFACTORED */
+.toggle {
+  position: fixed;
+  right: clamp(1rem, 3vw, 2rem);
+  bottom: clamp(1rem, 3vw, 2rem);
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-soft);
+  transition:
+    transform var(--transition-fast),
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.toggle:hover {
+  transform: translateY(-2px) rotate(12deg);
+  border-color: var(--color-border-strong);
+}
+
+.toggle:active {
+  transform: translateY(0) scale(0.95);
+}
+
+.toggle:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toggle:hover {
+    transform: none;
+  }
+}

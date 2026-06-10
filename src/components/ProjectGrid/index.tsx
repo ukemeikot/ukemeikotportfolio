@@ -22,6 +22,7 @@ const filters: ProjectFilter[] = [
 const FEATURED_ORDER = [
   'fitcall',
   'messaging-calling-backend',
+  'insighta-genderise-api',
   'mira-care',
   'crednews-newsroom',
   'swiftdeploy',

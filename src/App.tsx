@@ -8,6 +8,7 @@ import Quotes from './components/Quotes';
 import ScrollReveal from './components/ScrollReveal';
 import SectionWrapper from './components/SectionWrapper';
 import Skills from './components/Skills';
+import ThemeToggle from './components/ThemeToggle';
 import { articles } from './data/articles';
 import { experience } from './data/experience';
 import { projects } from './data/projects';
@@ -83,14 +84,10 @@ const App = () => {
     return (
       <div className="app-shell">
         <div className="site-card">
-          <Navbar
-            items={navItems}
-            onNavigate={handleNavigate}
-            theme={theme}
-            onToggleTheme={toggleTheme}
-          />
+          <Navbar items={navItems} onNavigate={handleNavigate} />
           <ProjectDetail project={activeProject} onClose={() => handleNavigate('projects')} />
         </div>
+        <ThemeToggle theme={theme} onToggle={toggleTheme} />
       </div>
     );
   }
@@ -98,12 +95,7 @@ const App = () => {
   return (
     <div className="app-shell">
       <div className="site-card">
-        <Navbar
-          items={navItems}
-          onNavigate={handleNavigate}
-          theme={theme}
-          onToggleTheme={toggleTheme}
-        />
+        <Navbar items={navItems} onNavigate={handleNavigate} />
         <main>
           <Hero content={heroContent} socials={socialLinks} onNavigate={handleNavigate} />
           <Quotes />
@@ -133,6 +125,7 @@ const App = () => {
           </SectionWrapper>
         </main>
       </div>
+      <ThemeToggle theme={theme} onToggle={toggleTheme} />
     </div>
   );
 };

@@ -1,260 +1,59 @@
-Here's a comprehensive prompt you can paste directly into Codex:
+# AGENTS.md — working in this repo
 
----
+Guidance for AI agents (and humans) contributing to Ukeme Ikot's portfolio. Read this before editing.
 
-**CODEX PROMPT — Portfolio Website Refactor**
+## What this is
 
-````
-You are an expert frontend engineer performing a full refactor of my portfolio website codebase. Follow every instruction below precisely and completely.
+A Vite + React 19 + TypeScript single-page portfolio with a monochrome, monospace-led design. Content is data-driven; components are presentational. There is no backend — it is a static site.
 
----
+## Commands
 
-## OBJECTIVES
-
-1. Componentize the codebase
-2. Standardize styling and architecture
-3. Optimize for performance
-4. Audit and rewrite all copy
-5. Improve animations
-6. Update typography to Clash Display + Grotesk pairing
-7. Write a professional README
-
----
-
-## 1. COMPONENT ARCHITECTURE
-
-- Audit every file and extract repeated or logical UI blocks into standalone, reusable components
-- Each component should live in `/components` with its own folder: `/components/ComponentName/index.tsx` + `ComponentName.module.css` (or `.styled.ts` if using styled-components)
-- Components to create at minimum (add more as needed):
-  - `Navbar`
-  - `Hero`
-  - `About`
-  - `ProjectCard`
-  - `ProjectGrid`
-  - `SkillBadge`
-  - `ExperienceItem`
-  - `Footer`
-  - `SectionWrapper` (shared layout wrapper with consistent padding/max-width)
-  - `AnimatedText` (for headline entrance animations)
-  - `ScrollReveal` (reusable scroll-triggered wrapper)
-- All components must be typed with TypeScript interfaces/props
-- No logic or data should be hardcoded inside components — pass everything via props or pull from a `/data` or `/content` config file
-
----
-
-## 2. STYLING STANDARDS
-
-- Use CSS custom properties (design tokens) defined in a global `:root` for all colors, spacing, font sizes, radii, and transitions
-- Follow a consistent spacing scale: 4px base unit (4, 8, 12, 16, 24, 32, 48, 64, 96px)
-- All colors must use semantic naming: `--color-bg`, `--color-surface`, `--color-text-primary`, `--color-text-muted`, `--color-accent`, `--color-accent-hover`
-- Implement dark mode via `prefers-color-scheme` and a manual toggle, both using the same CSS variable system
-- Responsive breakpoints: mobile-first. Breakpoints at 480px, 768px, 1024px, 1280px
-- Remove all inline styles. No style props on JSX elements unless dynamically computed
-- Standardize all section layouts using the `SectionWrapper` component
-
----
-
-## 3. TYPOGRAPHY — CLASH DISPLAY + CABINET GROTESK
-
-- Install and configure:
-  - **Clash Display** — used for all headings (H1–H3), hero text, project titles, and section headers
-  - **Cabinet Grotesk** — used for all body copy, nav items, labels, captions, and UI text
-- Define in global CSS:
-
-  ```css
-  --font-display: 'Clash Display', sans-serif;
-  --font-body: 'Cabinet Grotesk', sans-serif;
-````
-
-- Typography scale:
-  - Hero H1: clamp(48px, 7vw, 96px), Clash Display, weight 700
-  - H2 section headers: clamp(32px, 4vw, 56px), Clash Display, weight 600
-  - H3 card/item titles: clamp(20px, 2.5vw, 28px), Clash Display, weight 500
-  - Body: clamp(15px, 1.2vw, 17px), Cabinet Grotesk, weight 400
-  - Labels/captions: 13px, Cabinet Grotesk, weight 500, letter-spacing 0.08em, uppercase
-- Remove all system font fallbacks from heading elements
-
----
-
-## 4. ANIMATIONS
-
-Refactor all animations to follow these principles — smooth, purposeful, performance-safe:
-
-- Use `will-change: transform, opacity` only on actively animating elements
-- All animations must use `transform` and `opacity` only (no animating `height`, `width`, `top`, `left`, `margin`)
-- Respect `prefers-reduced-motion` — wrap all animations with a media query check and provide instant/no-transition fallback
-
-### Specific animations to implement:
-
-- **Hero text**: Staggered word or line reveal using `opacity: 0 → 1` + `translateY(24px → 0)`, 0.6s ease-out, 80ms stagger between words
-- **Scroll reveal**: All sections and cards fade + slide up (`translateY(32px → 0)`, opacity 0→1) when entering viewport using IntersectionObserver inside the `ScrollReveal` component
-- **Navbar**: On scroll down — slim and add `backdrop-filter: blur(12px)` + subtle border-bottom. On scroll up — restore full height
-- **Project cards**: On hover — subtle `translateY(-4px)` lift + `box-shadow` deepens. Transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)
-- **Cursor (optional)**: Custom cursor dot that follows mouse with lerp smoothing (if not already present)
-- **Page transitions**: Fade-out/fade-in between route changes (100ms out, 200ms in)
-- **Skill badges**: Staggered pop-in on scroll enter using `scale(0.85 → 1)` + opacity
-
-Use Framer Motion if the project already uses React. If vanilla JS — use a single `animations.js` utility with IntersectionObserver + CSS class toggling.
-
----
-
-## 5. COPY AUDIT — REWRITE ALL TEXT
-
-Rewrite every piece of copy on the site to reflect a senior engineer with strong command of frontend, backend, and mobile development. Tone: confident, precise, no fluff. Use active voice. Avoid clichés like "passionate", "rockstar", "ninja", "love to code".
-
-### Hero Section
-
-- Headline should communicate full-stack + mobile capability immediately
-- Example pattern (rewrite in my voice): "[Name] — Engineer building high-performance web and mobile products, from pixel-perfect interfaces to scalable backend systems."
-- Subheadline: 1–2 sentences on what I specialise in and the kind of problems I solve
-
-### About Section
-
-- Rewrite to emphasise: technical depth across the stack, mobile (iOS/Android/React Native), production experience, engineering craft
-- Should feel like a senior engineer wrote it, not a bootcamp grad
-- 3–4 tight sentences max
-
-### Skills / Tech Stack Section
-
-- Organise into clear categories:
-  - **Frontend**: React, Next.js, TypeScript, Tailwind CSS, Framer Motion, etc.
-  - **Backend**: Node.js, Express, PostgreSQL, REST APIs, GraphQL, etc.
-  - **Mobile**: React Native, Expo, etc.
-  - **Tooling & Infra**: Git, CI/CD, Vercel, Docker, etc.
-- Each category should have a short one-liner descriptor, not just a list of logos
-
-### Project Descriptions
-
-For each project card, rewrite the description to follow this structure:
-
-1. **What it is** — one sentence
-2. **Technical challenge** — what was hard or interesting to build
-3. **Stack** — listed inline
-4. **Impact/outcome** — metrics, users, or result if available
-
-### Experience / Timeline Section
-
-- Rewrite each role using action verbs: Architected, Engineered, Shipped, Led, Optimised, Integrated
-- Lead with impact, follow with method
-
----
-
-## 6. PERFORMANCE OPTIMISATIONS
-
-- Audit and fix all of the following:
-  - Lazy load all images using `loading="lazy"` + convert to `.webp` where possible
-  - Add `width` and `height` attributes to all `<img>` tags to prevent layout shift
-  - Code-split route-level components using dynamic imports (`React.lazy` / `next/dynamic`)
-  - Remove all unused CSS and unused JS imports
-  - Move all Google Fonts or custom fonts to self-hosted with `font-display: swap`
-  - Add `rel="preload"` for above-the-fold fonts and hero images
-  - Ensure no render-blocking scripts — all third-party scripts use `defer` or `async`
-  - Memoize expensive components with `React.memo` where appropriate
-  - Use `useCallback` and `useMemo` where dependencies are stable and computation is non-trivial
-
----
-
-## 7. FILE & FOLDER STRUCTURE
-
-Enforce this structure (adjust for Next.js / Vite / CRA as appropriate):
-
-```
-/
-├── components/
-│   ├── Navbar/
-│   ├── Hero/
-│   ├── About/
-│   ├── ProjectCard/
-│   ├── ProjectGrid/
-│   ├── SkillBadge/
-│   ├── ExperienceItem/
-│   ├── Footer/
-│   ├── SectionWrapper/
-│   ├── AnimatedText/
-│   └── ScrollReveal/
-├── data/
-│   ├── projects.ts
-│   ├── skills.ts
-│   └── experience.ts
-├── styles/
-│   ├── globals.css       ← design tokens, resets, typography
-│   ├── animations.css    ← keyframes and animation utilities
-│   └── utils.css         ← helper classes
-├── public/
-│   └── fonts/            ← self-hosted Clash Display + Cabinet Grotesk
-├── pages/ or app/        ← route files only, no inline logic
-└── README.md
+```bash
+npm install        # install
+npm run dev        # local dev server
+npm run build      # tsc -b && vite build (must pass before committing)
+npm run lint       # eslint
 ```
 
----
+Always run `npm run build` after changes — it type-checks and bundles. The repo uses `noUnusedLocals`, so remove unused imports/vars.
 
-## 8. README
+## Architecture & conventions
 
-Generate a complete `README.md` with the following sections:
+- **Data-driven content.** Prefer editing `src/data/*` over components. Components render whatever the typed data provides.
+  - `projects.ts` — projects and their `caseStudy` blocks
+  - `skills.ts`, `experience.ts`, `articles.ts`, `quotes.ts`
+  - `siteContent.ts` — hero, about, nav items, socials, contact
+  - `types.ts` — shared content types (update here first when adding fields)
+- **Styling = CSS Modules + tokens.** Each component owns a `ComponentName.module.css`. All colours/spacing/radii/transitions are CSS variables defined in `src/styles/globals.css`. Never hardcode colours or add inline `style` props (except dynamically computed values). Do not introduce a CSS framework.
+- **Design system.** Monochrome only. Fonts: `--font-display`/`--font-mono` = Space Mono, `--font-body` = Space Grotesk. The whole site sits in a single rounded `.site-card`; page and card share one background colour. Navbar is sticky.
+- **Motion is safe.** Animate `transform`/`opacity` only, and always provide a `@media (prefers-reduced-motion: reduce)` fallback.
+- **Performance.** Heavy sections are `React.lazy` + `Suspense` in `App.tsx`; memoize where it helps; lazy-load below-the-fold images.
+- **Diagrams are inline SVG.** Architecture diagrams live in `components/CaseStudyDiagram` and are selected by a string `diagram` id on a project's `caseStudy`. No charting libraries.
 
-```md
-# [Your Name] — Portfolio
+## How to: add a project
 
-## Overview
+Add an entry to `src/data/projects.ts` (`ProjectEntry`). Key fields: `slug`, `title`, `type`, `categories` (`'frontend-mobile' | 'backend' | 'devops'`, may be multiple), `summary`, `tech`, optional `liveUrl`/`repoUrl`, and an optional rich `caseStudy`.
 
-Brief description of what this is and what it showcases.
+A `caseStudy` supports: `intro`, `problem`, `architecture`, `diagram` (id), `modules[]`, `sections[]`, `contributions[]` (grouped "what I built"), `challenge`, and `links[]`. All are rendered by `components/ProjectDetail`.
 
-## Tech Stack
+To feature a project near the top of the grid, add its `slug` to `FEATURED_ORDER` in `components/ProjectGrid/index.tsx`. To give it a short label in the constellation, add it to `SHORT` in `components/TechConstellation/index.tsx`.
 
-Table listing: Category | Technologies
+## How to: add a case-study diagram
 
-## Features
+Add a new `<NameDiagram />` and a `if (id === '<name>')` branch in `components/CaseStudyDiagram/index.tsx` (reuse the `Box`/`Edge` helpers and a `cs-arrow` marker), then set `caseStudy.diagram = '<name>'` on the project.
 
-- List of key features (animations, dark mode, responsive, etc.)
+## Content accuracy rules
 
-## Project Structure
+- This is a real person's portfolio. **Do not invent facts, metrics, employers, or contributions.** When asked to describe project work, study the actual repo/commits first and write only what is supported; flag uncertainty to the user rather than guessing.
+- Keep real links accurate; do not point "Source" at a generic profile when no repo exists.
 
-Folder tree with one-line descriptions of each directory
+## Git
 
-## Getting Started
+- Commits are authored solely by the repo owner. **Do not add `Co-Authored-By` / agent trailers.**
+- Default branch is `main`. Build must pass before pushing.
 
-### Prerequisites
+## House style
 
-### Installation
-
-### Running locally
-
-### Building for production
-
-## Performance
-
-Lighthouse scores (add placeholders: Performance 98, Accessibility 100, Best Practices 100, SEO 100)
-
-## Design Decisions
-
-Short notes on: font pairing rationale, animation philosophy, component architecture decisions
-
-## Deployment
-
-How and where it's deployed (Vercel / Netlify etc.)
-
-## License
-
-MIT
-```
-
----
-
-## RULES
-
-- Do not remove any existing projects, experience entries, or real personal data
-- Preserve all existing routes and page structure
-- Do not introduce new dependencies without a clear reason — prefer native browser APIs where possible
-- Every file you touch must be left cleaner than you found it
-- Leave a `// REFACTORED` comment at the top of every file you modify
-- If anything is ambiguous, make the more performant and maintainable choice
-
-```
-
----
-
-**Tips for using this in Codex:**
-- Run it against your full repo by attaching the codebase before submitting
-- If Codex has a file limit, prioritise sending: `pages/` or `app/`, `components/`, `styles/`, and `public/` folders first
-- After the first pass, follow up with: *"Now audit the copy specifically and rewrite it assuming I have 3+ years of fullstack and mobile experience"*
-```
+- Leave a `// REFACTORED` comment marker at the top of files that follow the refactored conventions (existing pattern).
+- Match the surrounding code: small typed components, content out of components, modules for styles.
+- Prefer the more maintainable, more accessible choice when ambiguous.

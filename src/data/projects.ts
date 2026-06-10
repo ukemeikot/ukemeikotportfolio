@@ -178,6 +178,27 @@ export const projects: ProjectEntry[] = [
       'Noramum.app combines a Next.js administrative surface with React Native mobile apps so families can track appointments, childcare records, and developmental milestones from multiple devices. The architecture emphasised realtime parity, optimistic updates, queue-based syncing, and automatic retries so users could continue working with confidence in unstable network conditions. Security controls and encrypted handling of family data were a first-order concern throughout the build.',
     tech: ['Next.js', 'React Native', 'Expo', 'Tailwind CSS', 'Redux', 'Node.js', 'WebSocket', 'PostgreSQL', 'E2E Encryption'],
     liveUrl: 'https://noramum.app',
+    caseStudy: {
+      intro:
+        'Noramum is a childcare-management platform for families and carers — one product with a Next.js web surface and React Native mobile apps, built so shared records, schedules, and milestones stay in sync across everyone’s devices.',
+      problem:
+        'Childcare coordination is multi-device and multi-person by nature: a parent updates something on their phone, a carer needs it on the web a moment later, and the network can drop at the worst time. Noramum had to keep everyone’s view consistent, protect sensitive family data, and stay usable offline.',
+      architecture:
+        'A Next.js administrative web app and React Native (Expo) mobile clients share a Node.js backend over WebSockets and PostgreSQL, with Redux managing client state. The system is built around realtime parity — changes propagate live — backed by optimistic updates, a queue-based sync layer, and automatic retries so a device that goes offline catches up cleanly on reconnect. Family data is access-controlled and encrypted end to end.',
+      modules: [
+        { name: 'Next.js admin', detail: 'Web surface for managing appointments, childcare records, and family/carer accounts.' },
+        { name: 'React Native apps · Expo', detail: 'Mobile clients for families and carers, sharing the same records.' },
+        { name: 'realtime sync · WebSockets', detail: 'Live propagation of changes across devices with optimistic updates.' },
+        { name: 'offline queue', detail: 'Queue-based syncing with automatic retries so work continues when connectivity drops.' },
+        { name: 'data protection', detail: 'Role-based access and end-to-end encryption for sensitive family data.' },
+      ],
+      challenge: {
+        title: 'Consistency across devices when the network can’t be trusted',
+        solution:
+          'The core problem was keeping multiple devices in agreement without a reliable connection. Noramum applies optimistic updates locally for instant feedback, queues mutations when offline, and replays them with automatic retries on reconnect, while WebSockets push authoritative state to every client so views converge. The result is an app that feels live when connected and never loses a parent’s or carer’s change when it is not.',
+      },
+      links: [{ label: 'Live · noramum.app', href: 'https://noramum.app' }],
+    },
   },
   {
     slug: 'swiftauth-sdk',
@@ -189,13 +210,49 @@ export const projects: ProjectEntry[] = [
     challenge:
       'The challenge was exposing flexible authentication flows through a typed interface while handling provider-specific failures cleanly.',
     stackLine:
-      'Stack: TypeScript, Firebase Auth, React Native, Jest, GitHub Actions, NPM publishing.',
+      'Stack: TypeScript, React Native, Expo, Firebase Auth, Google & Apple Sign-In, AsyncStorage, published to npm.',
     impact:
-      'Impact: gave developers a faster integration path, clearer errors, and a reusable package built for repeatable releases.',
+      'Impact: gave developers a faster integration path, friendly typed errors, and a reusable package adoptable in minutes — drop-in UI or fully headless.',
     details:
-      'SwiftAuth SDK abstracts common Firebase authentication workflows into a typed package with extensible options, structured error handling, and production-ready defaults. It was designed for teams that want to move quickly without scattering auth complexity throughout their application code. The package includes strong TypeScript support, automated release workflows, and documentation that lowers setup friction for new adopters.',
-    tech: ['TypeScript', 'Firebase Auth', 'NPM Package', 'React Native', 'GitHub Actions', 'ESLint', 'Jest', 'CI/CD'],
-    repoUrl: 'https://www.npmjs.com/package/rn-swiftauth-sdk',
+      'SwiftAuth abstracts common Firebase authentication workflows into a typed React Native package with extensible options, structured error handling, and production-ready defaults. It was built so teams can move quickly without scattering auth complexity through their app code — wrap the app in one provider, call one hook, and optionally render a polished pre-built screen. Published to npm as rn-swiftauth-sdk; built as an HNG Stage 8 team project (Mobile Ninjas).',
+    tech: ['TypeScript', 'React Native', 'Expo', 'Firebase Auth', 'Google Sign-In', 'Apple Sign-In', 'AsyncStorage', 'npm'],
+    repoUrl: 'https://github.com/allcodez/Auth-SDK_Stage8',
+    caseStudy: {
+      intro:
+        'SwiftAuth is a React Native authentication SDK that turns the usual auth boilerplate — Firebase wiring, Google and Apple sign-in, session persistence, and error handling — into a drop-in package. Wrap your app in one provider, call one hook, and optionally render a polished pre-built screen. It is published to npm as rn-swiftauth-sdk and was built as an HNG Stage 8 team project (Mobile Ninjas).',
+      problem:
+        'Every React Native app re-implements the same authentication plumbing: initialise Firebase, add Google and Apple sign-in with their platform quirks, persist sessions, and translate cryptic Firebase error codes into messages people can read. It is repetitive, easy to get subtly wrong, and rarely typed well. SwiftAuth packages that plumbing behind a small, fully typed surface so teams adopt it in minutes and still keep full control when they need it.',
+      architecture:
+        'A three-layer design. <AuthProvider> takes a typed AuthConfig (Firebase keys plus enableGoogle / enableApple / googleWebClientId and a persistence mode of "local" or "memory"), initialises Firebase, and exposes everything through AuthContext. The useAuth() hook is the public surface — it returns { user, status, error, isLoading } plus signInWithEmail, signUpWithEmail, signOut, sendPasswordReset, and clearError. For teams that do not want to build their own UI, <AuthScreen> (composed of LoginForm, SignUpForm, and a reusable PasswordInput) ships a customisable screen out of the box. Social auth runs through @react-native-google-signin and Apple Authentication, sessions persist via AsyncStorage, and the Firebase ID token is exposed as user.token for backend Bearer verification. It is 100% TypeScript with a compiled dist/ and an Expo example app.',
+      diagram: 'swiftauth',
+      modules: [
+        { name: 'core/AuthProvider.tsx · AuthContext.tsx', detail: 'Initialises Firebase from AuthConfig, owns auth state, and provides it through context.' },
+        { name: 'hooks/useAuth.ts', detail: 'The public hook — user/status/error/isLoading plus signIn/signUp/signOut/sendPasswordReset/clearError.' },
+        { name: 'components/AuthScreen.tsx', detail: 'Drop-in, customisable auth UI built from LoginForm, SignUpForm, and PasswordInput.' },
+        { name: 'errors/errorMapper.ts · exceptions.ts', detail: 'Maps Firebase codes to a typed AuthException hierarchy (InvalidCredentials, EmailAlreadyInUse, WeakPassword, Network, TokenExpired, Google/Apple cancelled).' },
+        { name: 'providers · Google / Apple', detail: 'Social sign-in via @react-native-google-signin and Apple Authentication, gated by enableGoogle / enableApple.' },
+        { name: 'types/*.ts', detail: 'auth.types, config.types, error.types, ui.types — fully typed config, state, errors, and component props.' },
+      ],
+      sections: [
+        {
+          heading: 'Two levels of adoption',
+          body: 'SwiftAuth meets teams where they are. Drop in <AuthScreen> for a complete, styled flow in minutes, or ignore the UI entirely and drive everything from useAuth() to build a custom experience. Both paths share the same provider, status state, and error handling, so you can start with the screen and graduate to full control without rewiring auth.',
+        },
+        {
+          heading: 'Errors humans can read',
+          body: 'Firebase throws codes like auth/weak-password; SwiftAuth routes them through a single errorMapper into a typed AuthException hierarchy, each carrying code, message, timestamp, and the originalError. Components read a friendly message and call clearError() to reset — no scattered try/catch parsing Firebase strings.',
+        },
+      ],
+      challenge: {
+        title: 'Hiding three auth providers behind one consistent surface',
+        solution:
+          'Email/password, Google, and Apple each have different SDKs, platform constraints (Apple is iOS-only), cancellation semantics, and error shapes. The hard part was presenting them as one predictable API. SwiftAuth normalises all three into a single useAuth() contract and a unified status state, gates the social providers with enableGoogle / enableApple flags, and funnels every failure — including user-cancelled Google/Apple flows — through one typed exception layer. The upshot: turning on Apple sign-in is a config flag, not a refactor.',
+      },
+      links: [
+        { label: 'npm · rn-swiftauth-sdk', href: 'https://www.npmjs.com/package/rn-swiftauth-sdk' },
+        { label: 'GitHub repo', href: 'https://github.com/allcodez/Auth-SDK_Stage8' },
+      ],
+    },
   },
 
   // ---------- Backend ----------
@@ -240,40 +297,61 @@ export const projects: ProjectEntry[] = [
   },
   {
     slug: 'insighta-genderise-api',
-    title: 'Insighta Labs+ / Genderise API',
-    type: 'ASP.NET Core Platform',
-    categories: ['backend'],
-    summary:
-      'An ASP.NET Core backend for a profile-intelligence platform with OAuth, RBAC, CSV ingestion, natural-language query parsing, and export.',
-    challenge:
-      'The system had to support secure multi-role access, large CSV ingestion, fast filtered queries, and natural-language search while staying performant on a single SQLite store.',
-    stackLine:
-      'Stack: C#, ASP.NET Core, EF Core, SQLite (WAL), GitHub OAuth + PKCE, JWT, distributed cache, Docker.',
-    impact:
-      'Impact: delivers admin/analyst RBAC, streaming CSV ingestion up to 500MB with validation and dedup, cached filtered exports, and natural-language querying.',
-    details:
-      'An ASP.NET Core backend that aggregates demographic profile data and lets users query, filter, search, and export it. Authentication uses GitHub OAuth with PKCE, JWT access tokens with refresh rotation, and HTTP-only cookies for web clients, gated by role-based authorization. Performance work includes composite indexes, versioned distributed caching, DbContext pooling, and SQLite WAL pragmas for concurrent access. A streaming upload endpoint handles CSV ingestion with per-row validation, batch processing, and deduplication, and a natural-language parser turns phrases like "young males from Nigeria" into structured filters.',
-    tech: ['C#', 'ASP.NET Core', 'EF Core', 'SQLite', 'GitHub OAuth', 'PKCE', 'JWT', 'RBAC', 'Docker'],
-    repoUrl: 'https://github.com/ukemeikot/genderise-api',
-  },
-  {
-    slug: 'genderize-wrapper-api',
-    title: 'Genderize Wrapper API',
-    type: '.NET 9 REST API · Live',
+    title: 'Insighta Labs+',
+    type: 'Name-Intelligence Platform',
     categories: ['backend', 'devops'],
     summary:
-      'A .NET 9 REST API that classifies names by gender with input validation, confidence scoring, structured responses, and full CI/CD to AWS.',
+      'A name-intelligence platform that infers gender, age, and nationality from names — an ASP.NET Core backend with OAuth, RBAC and bulk CSV tooling, a live .NET 9 Genderize microservice, and a C# CLI client.',
     challenge:
-      'Beyond wrapping an upstream API, the goal was production hygiene: validation, confidence flags, comprehensive error handling, tests, and automated deployment.',
+      'Aggregating multiple inference signals behind secure, role-aware access with bulk ingestion and natural-language queries — and shipping a hardened, deployed classification service in front of flaky upstreams.',
     stackLine:
-      'Stack: C#, .NET 9, ASP.NET Core, xUnit + Moq + FluentAssertions, Swagger, Docker, AWS EC2, Caddy, GitHub Actions.',
+      'Stack: C#, ASP.NET Core, .NET 9, EF Core, SQLite (WAL), GitHub OAuth + PKCE, JWT, Docker, AWS EC2, Caddy, GitHub Actions, xUnit.',
     impact:
-      'Impact: a documented, tested, live API (api.hng.credianlab.xyz) with auto-deploy on push and 19 automated tests guarding behaviour.',
+      'Impact: secure admin/analyst analytics with streaming CSV ingestion and export, plus a live, tested Genderize API (api.hng.credianlab.xyz) and an installable operator CLI.',
     details:
-      'A .NET 9 REST API exposing GET /api/classify?name={name}. It validates input, calls Genderize.io, and returns structured results — renaming the upstream count to sample_size and computing an is_confident flag (probability ≥ 0.7 and sample_size ≥ 100). It handles 400/404/422/500/502 responses, enables CORS, and is documented with Swagger. The project includes 19 xUnit tests (Moq, FluentAssertions) and a GitHub Actions workflow that builds the Docker image and auto-deploys to AWS EC2 behind a Caddy reverse proxy.',
-    tech: ['C#', '.NET 9', 'xUnit', 'Moq', 'Swagger', 'Docker', 'AWS EC2', 'Caddy', 'GitHub Actions'],
+      'Insighta Labs+ is a name-intelligence platform: give it names and it infers gender, age, and nationality. It is made of three parts I worked on — an ASP.NET Core backend that aggregates the signals with secure access and bulk-data tools, a focused .NET 9 Genderize microservice deployed live to AWS, and a C# CLI client for operators and analysts.',
+    tech: ['C#', 'ASP.NET Core', '.NET 9', 'EF Core', 'SQLite', 'GitHub OAuth', 'PKCE', 'JWT', 'RBAC', 'Docker', 'AWS EC2', 'Caddy', 'GitHub Actions'],
     liveUrl: 'https://api.hng.credianlab.xyz/index.html',
-    repoUrl: 'https://github.com/ukemeikot/genderize-wrapper-api',
+    repoUrl: 'https://github.com/ukemeikot/genderise-api',
+    caseStudy: {
+      intro:
+        'Insighta Labs+ is a name-intelligence platform — give it names and it infers gender, age, and nationality. It is not one repo but three that I worked on: an ASP.NET Core backend that aggregates the signals behind secure, role-aware access; a focused .NET 9 Genderize microservice that is live on AWS; and a C# command-line client for operators and analysts.',
+      problem:
+        'Demographic inference from names is easy to demo and hard to run for real. Insighta Labs+ had to aggregate several third-party inference APIs, ingest large datasets, answer flexible queries, and expose all of it behind secure multi-role access — while staying fast on a single embedded datastore. And because it leans on flaky upstreams, the classification layer in front of them had to be more reliable than the services it calls.',
+      architecture:
+        'The backend is ASP.NET Core with EF Core over SQLite in WAL mode for concurrent reads/writes. Authentication uses GitHub OAuth with PKCE, JWT access tokens with refresh rotation, and HTTP-only cookies for web clients, gated by admin/analyst role-based authorization. A streaming upload endpoint ingests CSV (up to 500MB) with per-row validation, batch processing, and deduplication; a natural-language parser turns phrases like "young males from Nigeria" into structured filters, and the same filters drive a cached CSV export. Performance comes from composite indexes, versioned distributed caching, and DbContext pooling. Beside the backend sit a separate, hardened .NET 9 Genderize microservice — live on AWS EC2 behind Caddy — and a C# CLI that is the operator/analyst client for the platform.',
+      diagram: 'insighta',
+      modules: [
+        { name: 'Backend · ASP.NET Core', detail: 'EF Core over SQLite (WAL) with GitHub OAuth + PKCE, JWT access/refresh rotation, and admin/analyst RBAC.' },
+        { name: 'CSV ingestion', detail: 'Streaming upload (up to 500MB) with per-row validation, batch processing, and deduplication.' },
+        { name: 'Natural-language query + export', detail: 'Parses phrases like "young males from Nigeria" into structured filters; the same filters power a cached CSV export.' },
+        { name: 'Genderize microservice · .NET 9', detail: 'A hardened wrapper over Genderize.io: input validation, is_confident scoring, 502 on upstream failure, 19 xUnit tests — live on EC2 behind Caddy with GitHub Actions CI/CD.' },
+        { name: 'Insighta CLI · C#', detail: 'A dotnet global tool (HngInsightaLabs.Cli): login / whoami, profile list/search/get/create/delete, and profiles export to CSV; configurable backend URL.' },
+        { name: 'Performance', detail: 'Composite indexes, versioned distributed caching, DbContext pooling, and SQLite WAL pragmas for concurrent access.' },
+      ],
+      sections: [
+        {
+          heading: 'The Genderize microservice',
+          body: 'The classification layer is a standalone .NET 9 service exposing GET /api/classify?name=. It validates input before any network call (400/422), maps the upstream response into a clean DTO — renaming count to sample_size and computing a single is_confident flag (probability ≥ 0.7 AND sample_size ≥ 100) — and turns any upstream timeout or outage into a clean 502 instead of a leaked exception. 19 xUnit tests (Moq + FluentAssertions) lock the behaviour in, and a GitHub Actions pipeline builds, tests, and deploys the Docker container to AWS EC2 behind Caddy on every push. It is live and documented with Swagger at api.hng.credianlab.xyz.',
+        },
+        {
+          heading: 'The operator CLI',
+          body: 'HNGinsighta-CLI is a C# global .NET tool (HngInsightaLabs.Cli, installable via dotnet tool install) and the operator/analyst client for the platform. It offers insighta login / logout / whoami, profile list / search / get / create / delete, and profiles export to filtered CSV, caching credentials at ~/.insighta/credentials.json with a configurable backend URL (INSIGHTA_BACKEND_URL or insighta config set-backend). It talks to the Insighta backend, giving analysts the same querying and export power from the terminal.',
+        },
+      ],
+      challenge: {
+        title: 'Being more reliable than the APIs you depend on',
+        solution:
+          'The platform is only as trustworthy as the third-party inference APIs behind it. The Genderize microservice makes that boundary defensive: input is validated before any network call, the upstream base URL, timeout, and key are validated at startup, and any upstream timeout, outage, or unusable payload is caught and surfaced as a clean 502 with a stable message. Confidence is reduced to one is_confident boolean instead of a raw probability callers must interpret, and 19 xUnit tests pin the validation rules, confidence boundaries, zero-sample handling, and upstream failure paths — so the contract holds even when the upstream wobbles.',
+      },
+      links: [
+        { label: 'Live · Swagger', href: 'https://api.hng.credianlab.xyz/index.html' },
+        { label: 'Try · classify?name=James', href: 'https://api.hng.credianlab.xyz/api/classify?name=James' },
+        { label: 'Backend repo', href: 'https://github.com/ukemeikot/genderise-api' },
+        { label: 'Genderize service repo', href: 'https://github.com/ukemeikot/genderize-wrapper-api' },
+        { label: 'CLI repo', href: 'https://github.com/ukemeikot/HNGinsighta-CLI' },
+      ],
+    },
   },
   {
     slug: 'nextcloud-ddos-detector',
@@ -292,6 +370,28 @@ export const projects: ProjectEntry[] = [
       'A real-time anomaly detection system that monitors HTTP traffic to a Nextcloud instance via Nginx access logs. It uses 60-second sliding-window deques for per-IP and global request rates, a rolling 30-minute baseline with EWMA blending to model normal traffic by hour, and combined z-score + multiplier scoring to flag anomalies. Error-surge tightening catches credential-stuffing when 4xx/5xx rates spike. Offenders get a graduated ban schedule (10 min → 30 min → 2 hr → permanent) via iptables, with Slack alerts on bans/unbans and a FastAPI dashboard refreshing every 3 seconds.',
     tech: ['Python', 'FastAPI', 'iptables', 'Slack API', 'Docker Compose', 'Nginx', 'MySQL', 'Anomaly Detection'],
     repoUrl: 'https://github.com/ukemeikot/nextcloud-ddos-detector',
+    caseStudy: {
+      intro:
+        'Nextcloud DDoS Detector is a small SRE-style service that watches a Nextcloud instance’s traffic in real time, decides when something abnormal is happening, and acts — banning offenders and alerting the team — without a human in the loop.',
+      problem:
+        'Volumetric spikes and credential-stuffing do not announce themselves, and naive fixed thresholds either miss real attacks or lock out legitimate users during normal busy periods. The detector had to tell the difference using the traffic’s own rolling baseline, then respond automatically and proportionally.',
+      architecture:
+        'A Python/FastAPI service tails the Nginx access logs of a Nextcloud + MySQL stack (all in Docker Compose). It keeps 60-second sliding-window deques for per-IP and global request rates, and a rolling 30-minute baseline blended with EWMA so "normal" is modelled per hour of day. Each window is scored with both a z-score and a multiplier check — whichever trips first flags an anomaly — and an error-surge rule tightens thresholds when 4xx/5xx rates spike (the signature of credential stuffing). Offending IPs get a graduated ban via iptables, and a FastAPI dashboard refreshes every 3 seconds while bans, unbans, and global anomalies fire Slack alerts.',
+      modules: [
+        { name: 'sliding windows', detail: '60-second deques tracking per-IP and global request rates in real time.' },
+        { name: 'rolling baseline', detail: 'A 30-minute baseline with EWMA blending models normal traffic by hour of day.' },
+        { name: 'anomaly scoring', detail: 'Combined z-score + multiplier detection; whichever threshold breaches first triggers.' },
+        { name: 'error-surge tightening', detail: 'Tightens thresholds when 4xx/5xx rates spike to catch credential stuffing.' },
+        { name: 'graduated bans · iptables', detail: 'Escalating bans (10 min → 30 min → 2 hr → permanent) for repeat offenders.' },
+        { name: 'dashboard + Slack', detail: 'A FastAPI dashboard refreshing every 3s, with Slack alerts on bans/unbans/anomalies.' },
+      ],
+      challenge: {
+        title: 'Telling an attack apart from a busy Tuesday',
+        solution:
+          'Static rate limits are blunt — set them low and you ban real users at peak, set them high and you miss slow attacks. I made the detector learn the site’s own rhythm: a rolling 30-minute baseline blended with EWMA captures normal load per hour, and anomalies are judged relative to that baseline using both a z-score and a multiplier, so a spike only counts as a spike compared to what is normal right now. Error-surge tightening adds a second signal for credential stuffing, and bans escalate gradually so a one-off burst does not earn a permanent block.',
+      },
+      links: [{ label: 'Repo', href: 'https://github.com/ukemeikot/nextcloud-ddos-detector' }],
+    },
   },
 
   // ---------- DevOps ----------
@@ -334,24 +434,6 @@ export const projects: ProjectEntry[] = [
     },
   },
   {
-    slug: 'hng-stage2-devops',
-    title: 'HNG Stage 2 DevOps',
-    type: 'Containerised Job System',
-    categories: ['devops'],
-    summary:
-      'A containerised job-processing system — Express dashboard, FastAPI API, Redis queue, and a Python worker — with rolling EC2 deploys.',
-    challenge:
-      'The task was a properly networked microservice system with a real CI/CD pipeline: linting, tests, security scanning, and zero-downtime deploys.',
-    stackLine:
-      'Stack: Node.js/Express, Python/FastAPI, Redis, Docker Compose, GitHub Actions, Trivy, AWS EC2.',
-    impact:
-      'Impact: jobs flow from dashboard → Redis queue → worker with health checks, isolated networking, Trivy image scanning, and rolling EC2 deployment.',
-    details:
-      'A job-processing system where users submit jobs through a Node/Express dashboard; jobs are queued in Redis, processed by a Python background worker, and tracked from submission to completion through a FastAPI API. All services run on an internal Docker network with Redis never exposed to the host. The multi-stage GitHub Actions pipeline runs linting, unit and integration tests, Trivy security scans, and coverage reporting, then performs a rolling deployment to EC2 with health checks for zero-downtime updates.',
-    tech: ['Node.js', 'Express', 'FastAPI', 'Redis', 'Docker Compose', 'GitHub Actions', 'Trivy', 'AWS EC2'],
-    repoUrl: 'https://github.com/ukemeikot/hng14-stage2-devops',
-  },
-  {
     slug: 'devops-sandbox',
     title: 'DevOps Sandbox',
     type: 'Self-Service Environments',
@@ -368,5 +450,27 @@ export const projects: ProjectEntry[] = [
       'A self-service platform that provisions isolated, temporary environments, deploys applications, simulates infrastructure failures, monitors health, and tears resources down on TTL expiry or on demand. Each deployment gets its own Docker network and container to prevent cross-environment interference. The lifecycle layer is implemented twice (Bash + PowerShell) with identical results. A background cleanup daemon destroys expired environments, a health monitor polls every 30 seconds and flips status to degraded after three consecutive failures, and chaos modes simulate crash, pause, network disruption, recovery, and stress. A REST control plane on port 5000 manages everything.',
     tech: ['Python', 'Flask', 'Docker', 'Nginx', 'Bash', 'PowerShell', 'Chaos Engineering', 'REST'],
     repoUrl: 'https://github.com/ukemeikot/devops-sandbox',
+    caseStudy: {
+      intro:
+        'DevOps Sandbox is a self-service platform for throwaway environments: spin one up, deploy into it, break it on purpose, watch it heal or fail, and have it clean itself up — all from a small REST control plane.',
+      problem:
+        'Teams need safe, isolated places to test deployments and failure scenarios, but standing these up by hand is slow and they are easy to leave running and forget. The sandbox had to automate the whole lifecycle — provision, deploy, monitor, chaos-test, and tear down — on a single VM, and behave identically whether the host is Linux or Windows.',
+      architecture:
+        'A Python/Flask REST control plane (port 5000) drives Docker and Docker Compose, with Nginx as the reverse proxy. Each environment gets its own Docker network and container so they cannot interfere. The lifecycle layer is implemented twice — Bash and PowerShell — producing identical on-disk results, so the same platform runs on Linux or Windows. A background cleanup daemon destroys environments when their TTL expires, a health monitor polls every 30 seconds and flips an environment to "degraded" after three consecutive failures (~90s), and chaos modes simulate crash, pause, network disruption, recovery, and stress. Logs are shipped in real time with a forensic archive retained.',
+      modules: [
+        { name: 'control plane · Flask', detail: 'REST API on port 5000 to provision, deploy, inspect, and tear down environments.' },
+        { name: 'isolation', detail: 'Each environment gets its own Docker network and container to prevent cross-env interference.' },
+        { name: 'dual lifecycle · Bash + PowerShell', detail: 'The lifecycle layer is implemented twice with identical results, for Linux and Windows hosts.' },
+        { name: 'cleanup daemon · TTL', detail: 'Background daemon destroys environments when their time-to-live expires.' },
+        { name: 'health monitor', detail: 'Polls every 30s; flips status to degraded after three consecutive failures (~90s).' },
+        { name: 'chaos modes', detail: 'Simulates crash, pause, network disruption, recovery, and stress for failure testing.' },
+      ],
+      challenge: {
+        title: 'One platform, two operating systems, identical behaviour',
+        solution:
+          'The hard requirement was that the same sandbox behave the same on Linux and Windows. Rather than abstract over a single scripting language, the lifecycle layer is implemented twice — once in Bash, once in PowerShell — and verified to produce identical on-disk results, while the Flask control plane and Docker orchestration stay shared. That keeps the developer experience and the REST contract identical regardless of host, and makes the chaos and health behaviour reproducible across environments.',
+      },
+      links: [{ label: 'Repo', href: 'https://github.com/ukemeikot/devops-sandbox' }],
+    },
   },
 ];

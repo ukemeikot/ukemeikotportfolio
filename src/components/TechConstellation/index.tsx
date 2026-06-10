@@ -21,11 +21,9 @@ const SHORT: Record<string, string> = {
   'noramum-app': 'Noramum',
   'swiftauth-sdk': 'SwiftAuth',
   'messaging-calling-backend': 'Messaging API',
-  'insighta-genderise-api': 'Insighta API',
-  'genderize-wrapper-api': 'Genderize API',
+  'insighta-genderise-api': 'Insighta Labs+',
   'nextcloud-ddos-detector': 'DDoS Detector',
   swiftdeploy: 'SwiftDeploy',
-  'hng-stage2-devops': 'HNG Stage 2',
   'devops-sandbox': 'DevOps Sandbox',
 };
 
