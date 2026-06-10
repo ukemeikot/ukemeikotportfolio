@@ -4,7 +4,6 @@ import Footer from './components/Footer';
 import Hero from './components/Hero';
 import Navbar from './components/Navbar';
 import ProjectDetail from './components/ProjectDetail';
-import Quotes from './components/Quotes';
 import ScrollReveal from './components/ScrollReveal';
 import SectionWrapper from './components/SectionWrapper';
 import Skills from './components/Skills';
@@ -98,7 +97,6 @@ const App = () => {
         <Navbar items={navItems} onNavigate={handleNavigate} />
         <main>
           <Hero content={heroContent} socials={socialLinks} onNavigate={handleNavigate} />
-          <Quotes />
           <Suspense fallback={null}>
             <About content={aboutContent} />
           </Suspense>

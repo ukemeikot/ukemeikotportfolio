@@ -3,6 +3,7 @@ import { ArrowRight, ArrowUpRight, Github, Linkedin, Mail, Twitter } from 'lucid
 import type { LucideIcon } from 'lucide-react';
 import type { HeroContent, SocialLink } from '../../data/types';
 import AnimatedText from '../AnimatedText';
+import Quotes from '../Quotes';
 import ScrollReveal from '../ScrollReveal';
 import styles from './Hero.module.css';
 
@@ -22,10 +23,41 @@ const socialIcons: Record<string, LucideIcon> = {
 const Hero = ({ content, socials, onNavigate }: HeroProps) => (
   <section id="home" className={styles.hero}>
     <div className={styles.inner}>
-      <div className={styles.headRow}>
+      <div className={styles.copy}>
         <h1 className={styles.title}>
           <AnimatedText lines={content.headline} />
         </h1>
+
+        <ScrollReveal delay={140}>
+          <p className={styles.goal}>
+            {content.goalLead}
+            <em className={styles.goalEmphasis}>{content.goalEmphasis}</em>
+            {content.goalTrail}
+          </p>
+        </ScrollReveal>
+
+        <ScrollReveal delay={240}>
+          <div className={styles.socials}>
+            {socials.map((social) => {
+              const Icon = socialIcons[social.label] ?? ArrowUpRight;
+              const isMail = social.href.startsWith('mailto:');
+              return (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  className={styles.socialPill}
+                  {...(isMail ? {} : { target: '_blank', rel: 'noreferrer' })}
+                >
+                  <Icon size={15} />
+                  {social.label}
+                </a>
+              );
+            })}
+          </div>
+        </ScrollReveal>
+      </div>
+
+      <div className={styles.aside}>
         <button
           type="button"
           className={styles.projectsBtn}
@@ -36,35 +68,9 @@ const Hero = ({ content, socials, onNavigate }: HeroProps) => (
             <ArrowRight size={16} />
           </span>
         </button>
+
+        <Quotes />
       </div>
-
-      <ScrollReveal delay={140}>
-        <p className={styles.goal}>
-          {content.goalLead}
-          <em className={styles.goalEmphasis}>{content.goalEmphasis}</em>
-          {content.goalTrail}
-        </p>
-      </ScrollReveal>
-
-      <ScrollReveal delay={240}>
-        <div className={styles.socials}>
-          {socials.map((social) => {
-            const Icon = socialIcons[social.label] ?? ArrowUpRight;
-            const isMail = social.href.startsWith('mailto:');
-            return (
-              <a
-                key={social.label}
-                href={social.href}
-                className={styles.socialPill}
-                {...(isMail ? {} : { target: '_blank', rel: 'noreferrer' })}
-              >
-                <Icon size={15} />
-                {social.label}
-              </a>
-            );
-          })}
-        </div>
-      </ScrollReveal>
     </div>
   </section>
 );
