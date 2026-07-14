@@ -2,6 +2,116 @@
 import type { ProjectEntry } from './types';
 
 export const projects: ProjectEntry[] = [
+  // ---------- Xental (flagship, payments platform + product) ----------
+  {
+    slug: 'xental',
+    title: 'Xental',
+    type: 'Payments Infrastructure Platform',
+    categories: ['backend', 'devops', 'frontend-mobile'],
+    summary:
+      'A payments infrastructure platform — hosted checkout, sub-merchant onboarding + KYC, dedicated virtual accounts, split settlement, transfers/payouts, and a full developer platform (API keys, OAuth, sandbox, webhooks) — on Nomba bank rails, with an AI-native layer (a payments Copilot, insights/forecasting, automation flows, and agent-discoverable APIs). I built it end-to-end: the .NET backend and its React/Next dashboard + checkout, the developer platform, security, CI/CD and AWS operations — plus PayLibre, a multi-tenant school-fee product built on top of Xental.',
+    challenge:
+      'Move real money reliably and safely: reconcile bank transfers into the right student’s fees, pay schools out, and expose a public API to third parties — multi-tenant, idempotent, and hardened against fraud and concurrency, shipping continuously to staging and production.',
+    stackLine:
+      'Stack: .NET 10, ASP.NET Core, EF Core, PostgreSQL, Nomba, HMAC-signed webhooks, JWT + HttpOnly cookies, React, Next.js, TypeScript; infra: Docker + Docker Compose, Traefik + Let’s Encrypt, GitHub Actions → GHCR, AWS EC2, Trivy + gitleaks scanning, OpenTelemetry, pg_dump backups.',
+    impact:
+      'Impact: a live payments platform (xental.online) — hosted checkout, sub-merchant onboarding, virtual accounts, split settlement, and a developer platform with sandbox + webhooks — plus PayLibre processing real deposits, refunds and settlements on top of it, all deployed continuously to staging and prod behind a review-driven security hardening pass.',
+    details:
+      'Xental is a payments infrastructure platform: businesses onboard as sub-merchants (KYC + document review), collect via a hosted checkout or a dedicated virtual account, split and settle funds to multiple parties, and pay out — all on Nomba bank rails. It ships with a real developer platform (scoped API keys, OAuth, a live sandbox, managed webhook endpoints, OpenAPI docs) and an AI-native layer: a payments Copilot you can ask in natural language, insights/aging/forecast analytics, automation flows, and agent-discoverable APIs (a `/.well-known/llms.txt`). I built the .NET 10 backend, the React/Next dashboard, hosted checkout and sandbox, the developer platform, and ran it in production on AWS. PayLibre — a multi-tenant school-fee platform — is the flagship product I built on top of Xental, and I operate the wider family (PayLibre, Kredar, AjoVault) on shared infrastructure.',
+    tech: ['.NET 10', 'ASP.NET Core', 'EF Core', 'PostgreSQL', 'Nomba', 'React', 'Next.js', 'TypeScript', 'Docker', 'Docker Compose', 'Traefik', 'GitHub Actions', 'GHCR', 'AWS EC2', 'Trivy', 'OpenTelemetry'],
+    liveUrl: 'https://xental.online',
+    caseStudy: {
+      intro:
+        'Xental is a payments infrastructure platform — think of the primitives a business needs to accept and move money: hosted checkout, sub-merchant onboarding with KYC, dedicated virtual accounts for bank-transfer collection, split settlement across parties, transfers/payouts, and a full developer platform (scoped API keys, OAuth, a live sandbox, managed webhooks, OpenAPI docs) — all riding Nomba bank rails. On top of the money primitives it has an AI-native layer: a Copilot you can ask about your payments in plain language, insights/aging/forecast analytics, automation flows, and APIs designed to be discoverable by AI agents. I built it end-to-end — the .NET 10 backend, the React/Next dashboard and hosted checkout, the developer platform and sandbox, the security hardening, and the AWS CI/CD that ships it — and I run it in production. PayLibre, a multi-tenant school-fee product, is the flagship built on Xental’s API, so this is a rare full-stack story: the rail and a real product on top of it.',
+      problem:
+        'Money is unforgiving. A deposit must land against the correct student’s oldest-due fees, exactly once, even when two transfers arrive at the same instant; refunds must never double-pay; a public API opened to schools must not leak one tenant’s data to another; and inbound provider webhooks must be authenticated, audited, and recoverable when they fail. All of this had to be multi-tenant, continuously deployed, and safe enough to touch real bank rails.',
+      architecture:
+        'Xental is an ASP.NET Core (.NET 10) platform in layered clean architecture (Api → Application → Infrastructure → Domain) over PostgreSQL with EF Core, fronting Nomba for the bank rails. The API surface is broad by design: merchant onboarding/KYC, sub-merchants, virtual accounts, hosted checkout (with a Server-Sent-Events stream so a checkout page shows live payment status), transactions and transfers, settlement splits with hold/release, and an admin plane to review and approve merchants. Around the money core sits a real developer platform — scoped API keys, OAuth, a live sandbox environment, managed webhook endpoints with signed delivery, and OpenAPI docs — plus an AI-native layer: a Copilot (`POST /copilot/ask`), insights (aging/forecast/customers), automation flows, and agent-discoverable APIs served at `/.well-known/llms.txt`. Clients are a React/Next merchant dashboard, the hosted checkout, and a developer/sandbox console. PayLibre consumes this API with client-credentials auth to provision sub-merchants and virtual accounts and to trigger settlement/refunds. Everything ships on AWS EC2 behind Traefik (Let’s Encrypt TLS), built by GitHub Actions to GHCR and released via a repository-dispatch to an infrastructure repo, with EF migrations applied on startup, OpenTelemetry tracing, and daily pg_dump backups.',
+      diagram: 'xental',
+      contributions: [
+        {
+          area: 'Xental platform · payments infrastructure',
+          items: [
+            'Built the core money primitives: sub-merchant onboarding with KYC (business details + document upload + review/approval), dedicated virtual accounts, transactions, transfers/payouts, and settlement splits with hold/release across multiple parties — all on Nomba bank rails.',
+            'Built a hosted checkout: create a checkout session by API, a hosted payment page, and a Server-Sent-Events stream so the page reflects live payment status without polling.',
+            'Built a real developer platform: scoped API keys, OAuth, a live sandbox environment, self-managed webhook endpoints with signed delivery, and published OpenAPI docs.',
+            'Added an AI-native layer: a payments Copilot (natural-language questions over your account), insights (aging / forecast / customers), automation flows, and agent-discoverable APIs served at `/.well-known/llms.txt`.',
+          ],
+        },
+        {
+          area: 'PayLibre · reconciliation on top of Xental',
+          items: [
+            'Integrated the Xental platform: sub-merchant + payout provisioning per school, dedicated virtual accounts per student, bank lookup, and settlement-balance reporting.',
+            'Built idempotent deposit reconciliation from HMAC-signed webhooks — oldest-due-first fee attribution with partial payments, surplus handling, and exactly-once semantics keyed on the provider transaction reference.',
+            'Serialized the money paths with a per-student/per-refund Postgres advisory lock to eliminate concurrent-deposit double-allocation and lost updates.',
+            'Implemented dual-control (maker-checker) refunds executed against Xental, plus a per-school settlement report (collected / settled / pending).',
+          ],
+        },
+        {
+          area: 'Backend · .NET / product',
+          items: [
+            'Built PayLibre end-to-end: schools, classes, students (with CSV import), fee categories, fees fanned out to per-student invoices, and payments.',
+            'Fees lifecycle: configurable late fees (per-school %, grace, per-fee opt-out) and dunning reminders (T-3 → due → weekly-overdue, capped) driven by a hosted background worker under an advisory lock.',
+            'Term rollover + bulk operations (promote, activate/deactivate, CSV export) and a collections dashboard with trends and a next-month forecast.',
+            'Parent app: children, fee accounts, payment history, downloadable receipts, payment disputes, and multi-guardian per student.',
+          ],
+        },
+        {
+          area: 'Auth & access control',
+          items: [
+            '2-step emailed-OTP sign-in for the dashboard and parent app, HttpOnly+Secure cookies alongside bearer JWTs, rotating refresh tokens, and forgot/reset password.',
+            'Role model with least privilege — Owner/Admin/Bursar plus read-only Accountant/Auditor and a ClassTeacher scoped to their own classes (session-carried class claims + row-level scoping).',
+            'Staff invitations (single-use, expiring, emailed tokens) and an immutable per-school audit log of who-did-what.',
+            'A scoped API-key layer + public API (X-Api-Key) so schools’ own systems can sync students and read balances, with per-scope authorization.',
+          ],
+        },
+        {
+          area: 'Integrations & webhooks',
+          items: [
+            'Inbound webhook pipeline with HMAC-SHA256 signature verification, an audit trail of every event, a dead-letter queue, and an operator replay endpoint.',
+            'Outbound webhooks to schools (payment.received / invoice.paid) — HMAC-signed, delivered with exponential-backoff retries by the background worker.',
+            'Config-gated notification channels: transactional email (Resend), SMS (Termii/Twilio), and a push-notification substrate (FCM) with device-token registration.',
+          ],
+        },
+        {
+          area: 'Security hardening',
+          items: [
+            'Ran a multi-angle security review (auth/tenancy, money/idempotency, data exposure, robustness) and fixed the findings.',
+            'Closed an SSRF vector in outbound webhooks (block loopback/link-local/metadata/private IPs at send time, disable redirects); made the JWT signing key fail-fast and the inbound webhook fail-closed when misconfigured.',
+            'Enforced tenant + role scoping on every read path, added constant-time secret comparisons, neutralized CSV formula injection in exports, HTML-encoded email content, and added GDPR data export + account erasure.',
+            'Added `UseForwardedHeaders` so per-client rate limiting works behind Traefik, and restricted API docs to non-production.',
+          ],
+        },
+        {
+          area: 'Frontend · React / Next.js',
+          items: [
+            'Built the dashboard surfaces: school registration, settlement + late-fee settings, and a Developers area (API-key management) with a self-serve public-API docs page.',
+            'Wired the frontend to the API with HttpOnly-cookie sessions that work cross-site from localhost without the cookie pitfalls, and fixed a production NEXT_PUBLIC API-URL + CORS misconfiguration.',
+          ],
+        },
+        {
+          area: 'DevOps · AWS / CI-CD',
+          items: [
+            'CI/CD with GitHub Actions building images to GHCR and releasing via repository-dispatch to an infrastructure repo; staging-first, then production.',
+            'AWS EC2 hosting behind Traefik with Let’s Encrypt TLS, EF migrations applied on startup, environment secrets rendered at deploy time, and scheduled daily pg_dump backups with rotation.',
+            'Operated the wider product family (PayLibre, Kredar, AjoVault) on shared infrastructure and diagnosed a live reconciliation incident from server + provider logs — tracing it to upstream webhook delivery rather than an application fault.',
+          ],
+        },
+      ],
+      challenge: {
+        title: 'Reconciling real money exactly once, under concurrency',
+        solution:
+          'The dangerous moment in a payments system is two events touching the same balance at once. Reconciliation reads a student’s open invoices, attributes the deposit oldest-due-first, and writes the results — a classic read-then-write that loses money under a race. I wrapped each money path in a Postgres transaction-scoped advisory lock keyed by the student (and by the refund), so concurrent deposits for the same student serialize instead of double-allocating, and a duplicate webhook becomes a clean no-op instead of a 500 — falling back to a no-op on the test database. Idempotency is anchored on the provider’s transaction reference, refunds require a second approver and lean on the provider’s per-deposit refund idempotency, and every inbound event is audited and replayable. The result is a reconciliation pipeline that is exactly-once, tamper-evident, and safe to run against live bank rails.',
+      },
+      links: [
+        { label: 'Xental · xental.online', href: 'https://xental.online' },
+        { label: 'Dashboard · app.xental.online', href: 'https://app.xental.online' },
+        { label: 'Developer sandbox · sandbox.xental.online', href: 'https://sandbox.xental.online' },
+        { label: 'PayLibre · app.paylibre.xental.online', href: 'https://app.paylibre.xental.online' },
+      ],
+    },
+  },
+
   // ---------- FitCall (flagship, full-stack + QA) ----------
   {
     slug: 'fitcall',

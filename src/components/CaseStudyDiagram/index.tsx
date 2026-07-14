@@ -301,7 +301,76 @@ const InsightaDiagram = () => (
   </svg>
 );
 
+const XentalDiagram = () => (
+  <svg
+    viewBox="0 0 1000 620"
+    className={styles.svg}
+    role="img"
+    aria-label="Xental architecture: a React dashboard, parent app and school systems (via a public API key) call the PayLibre .NET API, which consumes the Xental payments platform (sub-merchants, dedicated virtual accounts, settlement) over Nomba. Xental posts signed deposit.reconciled webhooks back to PayLibre, which reconciles against PostgreSQL. A background worker runs reminders, late fees and delivers signed outbound webhooks to schools. It runs on AWS EC2 behind Traefik, deployed by GitHub Actions."
+  >
+    <defs>
+      <marker id="cs-arrow" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+        <path d="M0,0 L7,3 L0,6 Z" className={styles.arrowHead} />
+      </marker>
+    </defs>
+
+    {/* edges */}
+    <Edge x1={165} y1={110} x2={400} y2={205} />
+    <Edge x1={500} y1={110} x2={500} y2={205} />
+    <Edge x1={835} y1={110} x2={600} y2={205} dashed label="X-Api-Key" />
+    <Edge x1={700} y1={250} x2={800} y2={250} label="client-creds" />
+    <Edge x1={890} y1={300} x2={890} y2={360} />
+    <Edge x1={800} y1={300} x2={620} y2={270} dashed label="deposit.reconciled · HMAC" />
+    <Edge x1={410} y1={325} x2={200} y2={430} />
+    <Edge x1={520} y1={325} x2={470} y2={430} />
+    <Edge x1={620} y1={470} x2={800} y2={470} dashed label="signed webhooks" />
+
+    {/* clients */}
+    <Box x={50} y={40} w={210} h={70} title="Dashboard" lines={['React · Next.js']} />
+    <Box x={390} y={40} w={220} h={70} title="Parent app" lines={['bearer JWT']} />
+    <Box x={720} y={40} w={240} h={70} title="School systems" lines={['Public API · SIS sync']} />
+
+    {/* PayLibre API */}
+    <Box
+      x={300}
+      y={205}
+      w={400}
+      h={120}
+      title="PayLibre API"
+      lines={['.NET 10 · Clean architecture', 'multi-tenant · fees · reconciliation · refunds']}
+    />
+
+    {/* Xental platform + Nomba */}
+    <Box x={800} y={205} w={180} h={95} title="Xental API" lines={['sub-merchants · DVAs', 'settlement']} />
+    <Box x={810} y={360} w={160} h={60} title="Nomba" lines={['bank rails']} />
+
+    {/* data + worker + outbound */}
+    <Box x={50} y={430} w={200} h={70} title="PostgreSQL" lines={['row-level tenant isolation']} />
+    <Box
+      x={300}
+      y={430}
+      w={280}
+      h={95}
+      title="Background worker"
+      lines={['reminders · late fees', 'webhook delivery · advisory lock']}
+    />
+    <Box x={800} y={440} w={170} h={60} title="School endpoints" lines={['outbound webhooks']} />
+
+    {/* infra band */}
+    <text x={50} y={575} className={styles.bandLabel}>
+      AWS EC2 · Traefik + Let’s Encrypt TLS · GitHub Actions → GHCR → infra deploy
+    </text>
+  </svg>
+);
+
 const CaseStudyDiagram = ({ id }: { id: string }) => {
+  if (id === 'xental') {
+    return (
+      <div className={styles.wrap}>
+        <XentalDiagram />
+      </div>
+    );
+  }
   if (id === 'insighta') {
     return (
       <div className={styles.wrap}>

@@ -18,8 +18,9 @@ const filters: ProjectFilter[] = [
   { id: 'devops', label: 'DevOps' },
 ];
 
-// FitCall (flagship, full-stack) leads, then one of each discipline.
+// Xental (payments infrastructure) leads, then FitCall and one of each discipline.
 const FEATURED_ORDER = [
+  'xental',
   'fitcall',
   'messaging-calling-backend',
   'insighta-genderise-api',
