@@ -4,13 +4,14 @@ import Footer from './components/Footer';
 import Hero from './components/Hero';
 import Navbar from './components/Navbar';
 import ProjectDetail from './components/ProjectDetail';
+import Repos from './components/Repos';
 import ScrollReveal from './components/ScrollReveal';
 import SectionWrapper from './components/SectionWrapper';
 import Skills from './components/Skills';
 import ThemeToggle from './components/ThemeToggle';
 import { articles } from './data/articles';
-import { experience } from './data/experience';
 import { projects } from './data/projects';
+import { repos } from './data/repos';
 import {
   aboutContent,
   contactContent,
@@ -23,7 +24,6 @@ import type { ProjectEntry } from './data/types';
 
 const About = lazy(() => import('./components/About'));
 const Articles = lazy(() => import('./components/Articles'));
-const ExperienceTimeline = lazy(() => import('./components/ExperienceTimeline'));
 const ProjectGrid = lazy(() => import('./components/ProjectGrid'));
 
 const App = () => {
@@ -104,11 +104,9 @@ const App = () => {
           <Suspense fallback={null}>
             <ProjectGrid projects={projects} onOpen={openProject} />
           </Suspense>
+          <Repos repos={repos} />
           <Suspense fallback={null}>
             <Articles articles={articles} />
-          </Suspense>
-          <Suspense fallback={null}>
-            <ExperienceTimeline items={experience} />
           </Suspense>
           <SectionWrapper
             id="contact"

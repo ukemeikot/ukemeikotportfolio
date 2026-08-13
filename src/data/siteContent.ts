@@ -4,6 +4,7 @@ import type { AboutContent, HeroContent, NavItem, SocialLink } from './types';
 export const navItems: NavItem[] = [
   { id: 'about', label: 'About' },
   { id: 'projects', label: 'Projects' },
+  { id: 'repos', label: 'Open Source' },
   { id: 'articles', label: 'Articles' },
   { id: 'contact', label: 'Contacts' },
 ];

@@ -45,6 +45,17 @@
 .meta p {
   color: var(--color-text-muted);
   font: var(--type-body);
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+/* Justify the long-form case-study prose */
+.csIntro,
+.csText,
+.csContribItem,
+.csModuleDetail {
+  text-align: justify;
+  text-justify: inter-word;
 }
 
 .meta {

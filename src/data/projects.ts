@@ -105,9 +105,149 @@ export const projects: ProjectEntry[] = [
       },
       links: [
         { label: 'Xental · xental.online', href: 'https://xental.online' },
-        { label: 'Dashboard · app.xental.online', href: 'https://app.xental.online' },
-        { label: 'Developer sandbox · sandbox.xental.online', href: 'https://sandbox.xental.online' },
         { label: 'PayLibre · app.paylibre.xental.online', href: 'https://app.paylibre.xental.online' },
+      ],
+    },
+  },
+
+  // ---------- ReadHub (reading & study platform) ----------
+  {
+    slug: 'readhub',
+    title: 'ReadHub',
+    type: 'Digital Reading & Study Platform',
+    categories: ['backend', 'frontend-mobile', 'devops'],
+    summary:
+      'A reading and study platform where readers upload their own books (PDF/EPUB), read them in the browser, take notes, and track reading sessions and stats — with Google sign-in and direct-to-storage uploads. I built the Node/Express (TypeScript) API and the React/Vite app, migrated file storage to S3-compatible object storage with presigned uploads, and run it in production with CI/CD and encrypted off-site backups.',
+    challenge:
+      'Let readers upload large book files straight to object storage — never through the API — read them in-browser, and keep MongoDB and the file store consistent, all deployed continuously and backed up so no reader ever loses their library.',
+    stackLine:
+      'Stack: Node.js 20, Express 5 (TypeScript/ESM), MongoDB (Mongoose), React 19, Vite 7, Tailwind CSS, Google OAuth, Brevo, MinIO (S3) with presigned PUT, epub.js / pdf.js; infra: Docker + Docker Compose, shared Traefik + Let’s Encrypt, GitHub Actions → GHCR, Cloudflare R2 backups.',
+    impact:
+      'Impact: a live platform (app.readhub.study) with in-browser PDF/EPUB reading, notes, reading-session tracking, and presigned-upload storage — shipped by a PR-driven CI/CD pipeline to a shared VPS, with nightly age-encrypted database + file backups to Cloudflare R2 and a tested restore.',
+    details:
+      'ReadHub is a reading platform: readers sign in with Google, upload their own books (PDF and EPUB) straight to object storage, read them in the browser (pdf.js / epub.js), take notes, and see reading-session tracking and stats. I built the Node.js 20 / Express 5 backend in TypeScript (ESM) over MongoDB, and the React 19 / Vite frontend, then migrated file storage off a third-party image host onto S3-compatible MinIO with browser-side presigned-PUT uploads so large files never transit the API. It runs in production on a shared VPS behind one Traefik edge — a separate staging and production stack, each with its own MongoDB and MinIO — released by a pull-request-driven GitHub Actions pipeline, and protected by nightly, age-encrypted database and file backups to Cloudflare R2.',
+    tech: ['Node.js', 'Express', 'TypeScript', 'MongoDB', 'React', 'Vite', 'Tailwind CSS', 'Google OAuth', 'MinIO / S3', 'Docker', 'Traefik', 'GitHub Actions', 'Cloudflare R2'],
+    liveUrl: 'https://app.readhub.study',
+    repoUrl: 'https://github.com/READHUB-STUDYAPP/readhub-backend',
+    caseStudy: {
+      intro:
+        'ReadHub is a reading and study platform — sign in with Google, bring your own books (PDF or EPUB), read them in the browser, take notes, and track your reading sessions and stats. I built both sides: the Node.js / Express (TypeScript) API over MongoDB and the React / Vite app, then re-platformed how files are stored so uploads go straight from the browser to object storage. It runs in production on a shared VPS with a PR-driven CI/CD pipeline and encrypted, off-site backups, so this is a full-stack story from the reader’s upload button down to the nightly backup.',
+      problem:
+        'Books are big files, and routing every upload through the API wastes bandwidth, ties up request threads, and caps file size. ReadHub needed the browser to upload directly to object storage while the API stayed the source of truth for who owns what — which means signed, time-limited upload URLs, a storage layer the API can also read from, and MongoDB records that never drift from the files they point at. On top of that it had to run two isolated environments (staging + production) cheaply on one box, deploy on every merge, and never lose a reader’s library.',
+      architecture:
+        'The backend is Express 5 on Node 20, written in TypeScript as ESM, over MongoDB with Mongoose. Auth is Google OAuth plus JWTs with rotating refresh tokens; transactional email goes through Brevo. File storage is S3-compatible MinIO reached with the AWS SDK v3: the browser asks the API for a short-lived presigned PUT URL and uploads the book directly to storage, and delivery is served from a public-read bucket. The React 19 / Vite 7 frontend renders PDFs with pdf.js and EPUBs with epub.js. In production it is a Docker Compose stack — backend, frontend (nginx), MongoDB, and MinIO — running as an isolated project per environment (staging and production) behind a single shared Traefik edge that terminates Let’s Encrypt TLS for every hostname (app./api./files.readhub.study). Releases are pull-request-driven: pushing to staging or main builds images to GHCR and dispatches a deploy to an infrastructure repo, which renders env from secrets, ships over SSH, and health-checks with an auto-rollback on staging. A nightly systemd timer backs the database and files up, age-encrypted, to Cloudflare R2.',
+      contributions: [
+        {
+          area: 'Backend · Node / Express / TypeScript',
+          items: [
+            'Built the Express 5 (TypeScript, ESM) API over MongoDB: books, notes, reading sessions and stats, user profiles, and a waitlist.',
+            'Google OAuth sign-in with JWT access tokens, rotating refresh tokens in HttpOnly cookies, and email verification / password reset via Brevo.',
+            'Modelled reading-session tracking and per-user stats, and a notes system tied to each book.',
+          ],
+        },
+        {
+          area: 'Storage · Cloudinary → MinIO / S3',
+          items: [
+            'Migrated file storage from a third-party image host to S3-compatible MinIO using the AWS SDK v3, so books and cover images live in a bucket the platform controls.',
+            'Implemented browser-side presigned-PUT uploads: the API signs a short-lived URL and the browser uploads the file directly to storage, keeping large files off the request path.',
+            'Fixed a real production upload bug — presigned URLs must be signed against the public files host, not the internal container endpoint — and disabled the SDK’s default flexible checksum so MinIO accepts the real-body PUT.',
+          ],
+        },
+        {
+          area: 'Frontend · React / Vite',
+          items: [
+            'Built the React 19 / Vite reader UI with in-browser PDF (pdf.js) and EPUB (epub.js) reading, a library, notes, and profile.',
+            'Wired uploads to the presigned-URL flow and reworked the client so it stores the returned public file URL.',
+          ],
+        },
+        {
+          area: 'DevOps · shared VPS / CI-CD',
+          items: [
+            'Stood up the infrastructure repo: a Docker Compose stack (backend, frontend, MongoDB, MinIO) run as an isolated project per environment behind one shared Traefik edge with Let’s Encrypt TLS.',
+            'Built the PR-driven pipeline: push to staging/main → GitHub Actions builds per-environment images to GHCR → repository-dispatch → deploy over SSH with a health check and staging auto-rollback; production rollback is a manual workflow.',
+            'Added nightly backups to Cloudflare R2 — an age-encrypted mongodump plus a copy of the file store — behind a systemd timer, and verified a full restore end-to-end.',
+            'Added PR CI checks (build / lint) as required status checks and branch protection so changes reach staging and main only through reviewed pull requests.',
+          ],
+        },
+      ],
+      challenge: {
+        title: 'Uploading big files without routing them through the API',
+        solution:
+          'The naive design streams every book upload through the API, which throttles throughput and caps file size. Instead the browser uploads straight to object storage: the API issues a short-lived presigned PUT URL scoped to a single object key, the browser PUTs the file directly to MinIO, and only the resulting public URL is recorded in MongoDB. The subtle failure was that presigned URLs must be signed against the public files hostname the browser will actually reach — signing against the internal container endpoint produced an unreachable, mixed-content URL — and the AWS SDK’s default flexible checksum, computed over an empty presign body, had to be disabled so MinIO accepts the real upload. With those fixed, uploads bypass the API entirely, stay fast, and the database and file store stay consistent.',
+      },
+      links: [
+        { label: 'Live · app.readhub.study', href: 'https://app.readhub.study' },
+        { label: 'API docs · api.readhub.study', href: 'https://api.readhub.study/api-docs' },
+      ],
+    },
+  },
+
+  // ---------- Kredar (B2B virtual-accounts fintech — my role: deployment / DevOps) ----------
+  {
+    slug: 'kredar',
+    title: 'Kredar',
+    type: 'B2B Fintech · Deployment & DevOps',
+    categories: ['devops', 'backend'],
+    summary:
+      'Kredar is a team-built Dedicated Virtual Accounts (DVA) fintech — businesses provision and reconcile dedicated virtual bank accounts for their customers on Nomba bank rails, built for the DevCareer × Nomba Hackathon. My contribution was deployment and production-readiness across the Kredar family (Kredar + AjoVault): Dockerizing the .NET and Next.js services, adding health checks and configurable CORS, wiring transactional email, building the GitHub Actions CI/CD, hardening the containers, and helping run the shared AWS infrastructure.',
+    challenge:
+      'Take a hackathon codebase written by the team and make it safely deployable and continuously shipped — containerized, health-checked, security-hardened, and promoted staging-first with a reviewer-gated production release, across two products sharing infrastructure.',
+    stackLine:
+      'My layer: Docker + Docker Compose, Traefik + Let’s Encrypt, GitHub Actions (build → GHCR → infra dispatch), AWS EC2 (eu-west-1), Trivy hardening. Product stack (team-built): .NET 10 / ASP.NET Core / EF Core / PostgreSQL / Nomba; Next.js frontend.',
+    impact:
+      'Impact: the Kredar family (kredar.xyz + AjoVault) deployed to AWS with a staging-first, reviewer-gated production pipeline — containerized, health-checked, CORS-configurable, and security-hardened.',
+    details:
+      'Kredar is a Dedicated Virtual Accounts engine built by a team for the DevCareer × Nomba Hackathon: businesses onboard as tenants, complete KYC, and provision a dedicated virtual bank account per customer on Nomba bank rails. I did not write the product features — my role across the family (Kredar and its companion savings app, AjoVault) was deployment and production-readiness: I containerized the .NET and Next.js services, added /health endpoints and configurable CORS, bound the Resend transactional-email config, built the GitHub Actions build-and-dispatch CI/CD, hardened the Docker images (non-root, Trivy findings), and contributed to the shared AWS infrastructure that runs both products behind Traefik with staging-first, reviewer-gated production releases.',
+    tech: ['Docker', 'Docker Compose', 'Traefik', 'GitHub Actions', 'GHCR', 'AWS EC2', 'Trivy', '.NET 10', 'Next.js', 'CORS', 'Resend'],
+    liveUrl: 'https://kredar.xyz',
+    repoUrl: 'https://github.com/kredar-vault/kredar-backend',
+    caseStudy: {
+      intro:
+        'Kredar is a Dedicated Virtual Accounts (DVA) fintech — infrastructure that lets a business give each of its customers a dedicated virtual bank account and reconcile the money that arrives — built by a team for the DevCareer × Nomba Hackathon. I want to be precise about my role: I did not build the product features. I joined as the deployment / DevOps engineer for the family (Kredar and its companion savings app, AjoVault), and my job was to take the application code the team wrote and make it production-ready and continuously deployable.',
+      problem:
+        'A hackathon codebase runs on a laptop; production does not. To ship Kredar and AjoVault safely I had to containerize the .NET and Next.js services, give each a health endpoint and configurable CORS, get transactional email working, harden the images against common findings, and stand up a pipeline that builds and deploys on every merge — across two separate products that share one set of infrastructure, without letting an unreviewed change reach production.',
+      architecture:
+        'The products are team-built: the Kredar backend is ASP.NET Core (.NET 10) with EF Core over PostgreSQL on Nomba rails, and the frontends are Next.js. My layer sits around that code. Each service ships as a Docker image (Next.js built in standalone output to keep images small; the backend runs as a non-root user), exposes a /health endpoint, and reads CORS origins from configuration so the same image runs in staging and production. GitHub Actions builds each image, pushes it to GHCR, and fires a repository-dispatch to a shared infrastructure repo that deploys over the family’s AWS EC2 (eu-west-1) host behind Traefik with Let’s Encrypt TLS — promoting staging first, then production behind a reviewer gate. AjoVault follows the same shape on the same shared infrastructure.',
+      contributions: [
+        {
+          area: 'Deployment & production-readiness',
+          items: [
+            'Wrote the Dockerfiles for the .NET backend and the Next.js frontends (Next.js standalone output for small images), and added a root landing route.',
+            'Added /health endpoints and made CORS origins configurable so one image runs across staging and production.',
+            'Bound the Resend transactional-email configuration so account and notification email works in deployed environments.',
+          ],
+        },
+        {
+          area: 'CI/CD · GitHub Actions',
+          items: [
+            'Built the build-and-dispatch pipeline: GitHub Actions builds each service image, pushes to GHCR, and fires a repository-dispatch to the shared infrastructure repo to deploy.',
+            'Made the infra dispatch best-effort and taught CI to ignore .env.* secret files; enforced LF line endings for Dockerfiles and workflows.',
+            'Kept production builds from failing on pre-existing type/lint errors so deploys stay unblocked, matching the pipeline used across the family.',
+          ],
+        },
+        {
+          area: 'Security hardening',
+          items: [
+            'Ran the containers as a non-root user to clear a Trivy DS-0002 finding, and kept secret files (.env.*) out of the build context and CI.',
+            'Deployed with configurable CORS and a scoped production configuration rather than permissive defaults.',
+          ],
+        },
+        {
+          area: 'Shared infrastructure',
+          items: [
+            'Contributed to the shared kredar-infrastructure (Docker Compose + Terraform for bare-VPS / multi-cloud) that hosts the family.',
+            'Helped operate Kredar and AjoVault together on AWS EC2 (eu-west-1) behind Traefik, with staging-first, reviewer-gated production releases.',
+          ],
+        },
+      ],
+      challenge: {
+        title: 'Making a hackathon build production-ready without owning its code',
+        solution:
+          'The work was to industrialize code I did not write, without changing its behaviour. I kept every deployment concern outside the application logic: containerization with a non-root runtime and Next.js standalone output, a /health endpoint per service, CORS driven entirely by configuration, transactional email bound from config, and a GitHub Actions pipeline that builds to GHCR and dispatches a deploy to shared infrastructure. Production is promoted staging-first behind a reviewer gate, and secret files are kept out of the image and CI — so two hackathon products became something that ships continuously and safely on shared AWS infrastructure.',
+      },
+      links: [
+        { label: 'Live · kredar.xyz', href: 'https://kredar.xyz' },
+        { label: 'Backend repo (team)', href: 'https://github.com/kredar-vault/kredar-backend' },
       ],
     },
   },
@@ -197,43 +337,6 @@ export const projects: ProjectEntry[] = [
 
   // ---------- Frontend & Mobile ----------
   {
-    slug: 'mira-care',
-    title: 'Mira Care',
-    type: 'Health-Tech AI Platform',
-    categories: ['frontend-mobile'],
-    summary:
-      'A preventive healthcare platform that combines web and mobile experiences for care teams managing high-signal patient data.',
-    challenge:
-      'The core challenge was orchestrating realtime monitoring, risk detection, and role-aware workflows without sacrificing responsiveness or compliance boundaries.',
-    stackLine:
-      'Stack: Next.js, React Native, TypeScript, WebSockets, PostgreSQL, Redis, AI/ML integration.',
-    impact:
-      'Impact: enabled proactive care coordination with faster alerting, collaborative workflows, and infrastructure designed for sensitive medical operations.',
-    details:
-      'Mira Care pairs a Next.js dashboard with a React Native mobile experience to support clinicians and care teams working from live patient signals. The system handles realtime updates, collaborative task management, and intelligent notifications while protecting sensitive data with strong access control and encryption. The product architecture was shaped around fast data access, low-latency streams, and offline resilience for healthcare workers who cannot depend on perfect connectivity.',
-    tech: ['Next.js', 'React Native', 'TypeScript', 'WebSocket', 'PostgreSQL', 'Redis', 'AI/ML Integration', 'HIPAA Compliance'],
-    repoUrl: 'https://github.com/ukemeikot/mira-fe',
-    caseStudy: {
-      problem:
-        'Care teams need a fast, role-aware web app to coordinate patients: admins manage agents, appointments, calendars, EHR and team invites, while frontline workers run a live patient queue and activity feed. The frontend had to deliver two distinct role experiences, secure multi-step auth, and a structure that stays maintainable as features grow.',
-      architecture:
-        'A Next.js App Router app in TypeScript and Tailwind. Route groups separate concerns cleanly: (auth) holds login, signup, email verification, password reset and invite-acceptance flows, while (Dashboard)/admin and (Dashboard)/workers are the two role surfaces with their own layouts and navigation. A typed api-client sits beneath a per-domain API layer (patients, appointments, teams, calls, EHR and calendar integrations, analytics). Auth lives in a dedicated store with use-auth and use-auth-bootstrap hooks behind a ProtectedRoute guard. Quality is enforced with Husky pre-commit/pre-push hooks and GitHub Actions, and the app is served with PM2.',
-      modules: [
-        { name: 'app/(auth)', detail: 'Login, signup, verify-email, reset-password and accept-invite flows.' },
-        { name: 'app/(Dashboard)/admin', detail: 'Agents, appointments, calendar, EHR, patients, team management and settings.' },
-        { name: 'app/(Dashboard)/workers', detail: 'Activity feed, appointments and a live patient queue.' },
-        { name: 'app/lib/api/*', detail: 'Typed per-domain API modules over a single shared api-client.' },
-        { name: 'app/stores/auth-store.ts', detail: 'Auth state with use-auth, use-auth-bootstrap and a ProtectedRoute guard.' },
-        { name: 'components', detail: 'Reusable modals (patients, appointments, teams) and dashboard widgets (stat cards, charts, queue cards).' },
-      ],
-      challenge: {
-        title: 'Two products in one app, with no protected-content flash on reload',
-        solution:
-          'Admin and worker are effectively two apps sharing one codebase. App Router route groups give each role its own layout, navigation and access boundary while reusing the same component library, typed api-client and auth store. The harder detail was session rehydration: on a hard refresh the app must restore the session before rendering, or protected screens flash and trigger redirect loops. A use-auth-bootstrap hook rehydrates auth into the store first, and ProtectedRoute holds rendering until bootstrap resolves — so the correct dashboard appears once, cleanly, with no flash.',
-      },
-    },
-  },
-  {
     slug: 'crednews-newsroom',
     title: 'CredNews',
     type: 'Cross-Platform News App',
@@ -269,99 +372,6 @@ export const projects: ProjectEntry[] = [
         solution:
           'A single AI provider on a free tier rate-limits almost immediately. CredNews rotates round-robin across four providers — Groq (fastest), Cerebras (quality), OpenRouter (free routes) and Gemini — with per-provider cooldowns when one returns 429 or errors, pooling roughly 80 requests/minute of free capacity. Responses stream via SSE over XHR and render character-by-character at about 125 chars/second, so even an instant reply feels like natural typing. On desktop, excluding node_modules from the Electron package kept the installer near 99 MB instead of 800 MB+.',
       },
-    },
-  },
-  {
-    slug: 'noramum-app',
-    title: 'Noramum.app',
-    type: 'Full-Stack SaaS Platform',
-    categories: ['frontend-mobile'],
-    summary:
-      'A childcare management platform with web and mobile clients designed around shared records, realtime updates, and sensitive family data.',
-    challenge:
-      'This product required dependable cross-device state synchronisation, careful access control, and user experience that remained stable when connectivity dropped.',
-    stackLine:
-      'Stack: Next.js, React Native, Expo, Tailwind CSS, Redux, Node.js, WebSockets, PostgreSQL.',
-    impact:
-      'Impact: delivered a unified childcare workflow for families with realtime updates, better operational visibility, and stronger data protection.',
-    details:
-      'Noramum.app combines a Next.js administrative surface with React Native mobile apps so families can track appointments, childcare records, and developmental milestones from multiple devices. The architecture emphasised realtime parity, optimistic updates, queue-based syncing, and automatic retries so users could continue working with confidence in unstable network conditions. Security controls and encrypted handling of family data were a first-order concern throughout the build.',
-    tech: ['Next.js', 'React Native', 'Expo', 'Tailwind CSS', 'Redux', 'Node.js', 'WebSocket', 'PostgreSQL', 'E2E Encryption'],
-    liveUrl: 'https://noramum.app',
-    caseStudy: {
-      intro:
-        'Noramum is a childcare-management platform for families and carers — one product with a Next.js web surface and React Native mobile apps, built so shared records, schedules, and milestones stay in sync across everyone’s devices.',
-      problem:
-        'Childcare coordination is multi-device and multi-person by nature: a parent updates something on their phone, a carer needs it on the web a moment later, and the network can drop at the worst time. Noramum had to keep everyone’s view consistent, protect sensitive family data, and stay usable offline.',
-      architecture:
-        'A Next.js administrative web app and React Native (Expo) mobile clients share a Node.js backend over WebSockets and PostgreSQL, with Redux managing client state. The system is built around realtime parity — changes propagate live — backed by optimistic updates, a queue-based sync layer, and automatic retries so a device that goes offline catches up cleanly on reconnect. Family data is access-controlled and encrypted end to end.',
-      modules: [
-        { name: 'Next.js admin', detail: 'Web surface for managing appointments, childcare records, and family/carer accounts.' },
-        { name: 'React Native apps · Expo', detail: 'Mobile clients for families and carers, sharing the same records.' },
-        { name: 'realtime sync · WebSockets', detail: 'Live propagation of changes across devices with optimistic updates.' },
-        { name: 'offline queue', detail: 'Queue-based syncing with automatic retries so work continues when connectivity drops.' },
-        { name: 'data protection', detail: 'Role-based access and end-to-end encryption for sensitive family data.' },
-      ],
-      challenge: {
-        title: 'Consistency across devices when the network can’t be trusted',
-        solution:
-          'The core problem was keeping multiple devices in agreement without a reliable connection. Noramum applies optimistic updates locally for instant feedback, queues mutations when offline, and replays them with automatic retries on reconnect, while WebSockets push authoritative state to every client so views converge. The result is an app that feels live when connected and never loses a parent’s or carer’s change when it is not.',
-      },
-      links: [{ label: 'Live · noramum.app', href: 'https://noramum.app' }],
-    },
-  },
-  {
-    slug: 'swiftauth-sdk',
-    title: 'SwiftAuth SDK',
-    type: 'Mobile Developer Tool',
-    categories: ['frontend-mobile'],
-    summary:
-      'A React Native authentication SDK that simplifies Firebase integration for teams shipping production mobile apps.',
-    challenge:
-      'The challenge was exposing flexible authentication flows through a typed interface while handling provider-specific failures cleanly.',
-    stackLine:
-      'Stack: TypeScript, React Native, Expo, Firebase Auth, Google & Apple Sign-In, AsyncStorage, published to npm.',
-    impact:
-      'Impact: gave developers a faster integration path, friendly typed errors, and a reusable package adoptable in minutes — drop-in UI or fully headless.',
-    details:
-      'SwiftAuth abstracts common Firebase authentication workflows into a typed React Native package with extensible options, structured error handling, and production-ready defaults. It was built so teams can move quickly without scattering auth complexity through their app code — wrap the app in one provider, call one hook, and optionally render a polished pre-built screen. Published to npm as rn-swiftauth-sdk; built as an HNG Stage 8 team project (Mobile Ninjas).',
-    tech: ['TypeScript', 'React Native', 'Expo', 'Firebase Auth', 'Google Sign-In', 'Apple Sign-In', 'AsyncStorage', 'npm'],
-    repoUrl: 'https://github.com/allcodez/Auth-SDK_Stage8',
-    caseStudy: {
-      intro:
-        'SwiftAuth is a React Native authentication SDK that turns the usual auth boilerplate — Firebase wiring, Google and Apple sign-in, session persistence, and error handling — into a drop-in package. Wrap your app in one provider, call one hook, and optionally render a polished pre-built screen. It is published to npm as rn-swiftauth-sdk and was built as an HNG Stage 8 team project (Mobile Ninjas).',
-      problem:
-        'Every React Native app re-implements the same authentication plumbing: initialise Firebase, add Google and Apple sign-in with their platform quirks, persist sessions, and translate cryptic Firebase error codes into messages people can read. It is repetitive, easy to get subtly wrong, and rarely typed well. SwiftAuth packages that plumbing behind a small, fully typed surface so teams adopt it in minutes and still keep full control when they need it.',
-      architecture:
-        'A three-layer design. <AuthProvider> takes a typed AuthConfig (Firebase keys plus enableGoogle / enableApple / googleWebClientId and a persistence mode of "local" or "memory"), initialises Firebase, and exposes everything through AuthContext. The useAuth() hook is the public surface — it returns { user, status, error, isLoading } plus signInWithEmail, signUpWithEmail, signOut, sendPasswordReset, and clearError. For teams that do not want to build their own UI, <AuthScreen> (composed of LoginForm, SignUpForm, and a reusable PasswordInput) ships a customisable screen out of the box. Social auth runs through @react-native-google-signin and Apple Authentication, sessions persist via AsyncStorage, and the Firebase ID token is exposed as user.token for backend Bearer verification. It is 100% TypeScript with a compiled dist/ and an Expo example app.',
-      diagram: 'swiftauth',
-      modules: [
-        { name: 'core/AuthProvider.tsx · AuthContext.tsx', detail: 'Initialises Firebase from AuthConfig, owns auth state, and provides it through context.' },
-        { name: 'hooks/useAuth.ts', detail: 'The public hook — user/status/error/isLoading plus signIn/signUp/signOut/sendPasswordReset/clearError.' },
-        { name: 'components/AuthScreen.tsx', detail: 'Drop-in, customisable auth UI built from LoginForm, SignUpForm, and PasswordInput.' },
-        { name: 'errors/errorMapper.ts · exceptions.ts', detail: 'Maps Firebase codes to a typed AuthException hierarchy (InvalidCredentials, EmailAlreadyInUse, WeakPassword, Network, TokenExpired, Google/Apple cancelled).' },
-        { name: 'providers · Google / Apple', detail: 'Social sign-in via @react-native-google-signin and Apple Authentication, gated by enableGoogle / enableApple.' },
-        { name: 'types/*.ts', detail: 'auth.types, config.types, error.types, ui.types — fully typed config, state, errors, and component props.' },
-      ],
-      sections: [
-        {
-          heading: 'Two levels of adoption',
-          body: 'SwiftAuth meets teams where they are. Drop in <AuthScreen> for a complete, styled flow in minutes, or ignore the UI entirely and drive everything from useAuth() to build a custom experience. Both paths share the same provider, status state, and error handling, so you can start with the screen and graduate to full control without rewiring auth.',
-        },
-        {
-          heading: 'Errors humans can read',
-          body: 'Firebase throws codes like auth/weak-password; SwiftAuth routes them through a single errorMapper into a typed AuthException hierarchy, each carrying code, message, timestamp, and the originalError. Components read a friendly message and call clearError() to reset — no scattered try/catch parsing Firebase strings.',
-        },
-      ],
-      challenge: {
-        title: 'Hiding three auth providers behind one consistent surface',
-        solution:
-          'Email/password, Google, and Apple each have different SDKs, platform constraints (Apple is iOS-only), cancellation semantics, and error shapes. The hard part was presenting them as one predictable API. SwiftAuth normalises all three into a single useAuth() contract and a unified status state, gates the social providers with enableGoogle / enableApple flags, and funnels every failure — including user-cancelled Google/Apple flows — through one typed exception layer. The upshot: turning on Apple sign-in is a config flag, not a refactor.',
-      },
-      links: [
-        { label: 'npm · rn-swiftauth-sdk', href: 'https://www.npmjs.com/package/rn-swiftauth-sdk' },
-        { label: 'GitHub repo', href: 'https://github.com/allcodez/Auth-SDK_Stage8' },
-      ],
     },
   },
 
@@ -403,184 +413,6 @@ export const projects: ProjectEntry[] = [
         solution:
           'A signalling WebSocket is easy to get wrong: with only a valid token, anyone could try to join another call’s signalling room and eavesdrop on or inject SDP/ICE messages. REST auth alone does not cover this. I made signalling access depend on real call participation — when a socket connects to a call’s channel it is checked against that call’s participant records before the websocket_manager registers it, so only verified participants can exchange signalling traffic. Membership is enforced at connection time rather than per message, keeping the hot path cheap.',
       },
-    },
-  },
-  {
-    slug: 'insighta-genderise-api',
-    title: 'Insighta Labs+',
-    type: 'Name-Intelligence Platform',
-    categories: ['backend', 'devops'],
-    summary:
-      'A name-intelligence platform that infers gender, age, and nationality from names — an ASP.NET Core backend with OAuth, RBAC and bulk CSV tooling, a live .NET 9 Genderize microservice, and a C# CLI client.',
-    challenge:
-      'Aggregating multiple inference signals behind secure, role-aware access with bulk ingestion and natural-language queries — and shipping a hardened, deployed classification service in front of flaky upstreams.',
-    stackLine:
-      'Stack: C#, ASP.NET Core, .NET 9, EF Core, SQLite (WAL), GitHub OAuth + PKCE, JWT, Docker, AWS EC2, Caddy, GitHub Actions, xUnit.',
-    impact:
-      'Impact: secure admin/analyst analytics with streaming CSV ingestion and export, plus a live, tested Genderize API (api.hng.credianlab.xyz) and an installable operator CLI.',
-    details:
-      'Insighta Labs+ is a name-intelligence platform: give it names and it infers gender, age, and nationality. It is made of three parts I worked on — an ASP.NET Core backend that aggregates the signals with secure access and bulk-data tools, a focused .NET 9 Genderize microservice deployed live to AWS, and a C# CLI client for operators and analysts.',
-    tech: ['C#', 'ASP.NET Core', '.NET 9', 'EF Core', 'SQLite', 'GitHub OAuth', 'PKCE', 'JWT', 'RBAC', 'Docker', 'AWS EC2', 'Caddy', 'GitHub Actions'],
-    liveUrl: 'https://api.hng.credianlab.xyz/index.html',
-    repoUrl: 'https://github.com/ukemeikot/genderise-api',
-    caseStudy: {
-      intro:
-        'Insighta Labs+ is a name-intelligence platform — give it names and it infers gender, age, and nationality. It is not one repo but three that I worked on: an ASP.NET Core backend that aggregates the signals behind secure, role-aware access; a focused .NET 9 Genderize microservice that is live on AWS; and a C# command-line client for operators and analysts.',
-      problem:
-        'Demographic inference from names is easy to demo and hard to run for real. Insighta Labs+ had to aggregate several third-party inference APIs, ingest large datasets, answer flexible queries, and expose all of it behind secure multi-role access — while staying fast on a single embedded datastore. And because it leans on flaky upstreams, the classification layer in front of them had to be more reliable than the services it calls.',
-      architecture:
-        'The backend is ASP.NET Core with EF Core over SQLite in WAL mode for concurrent reads/writes. Authentication uses GitHub OAuth with PKCE, JWT access tokens with refresh rotation, and HTTP-only cookies for web clients, gated by admin/analyst role-based authorization. A streaming upload endpoint ingests CSV (up to 500MB) with per-row validation, batch processing, and deduplication; a natural-language parser turns phrases like "young males from Nigeria" into structured filters, and the same filters drive a cached CSV export. Performance comes from composite indexes, versioned distributed caching, and DbContext pooling. Beside the backend sit a separate, hardened .NET 9 Genderize microservice — live on AWS EC2 behind Caddy — and a C# CLI that is the operator/analyst client for the platform.',
-      diagram: 'insighta',
-      modules: [
-        { name: 'Backend · ASP.NET Core', detail: 'EF Core over SQLite (WAL) with GitHub OAuth + PKCE, JWT access/refresh rotation, and admin/analyst RBAC.' },
-        { name: 'CSV ingestion', detail: 'Streaming upload (up to 500MB) with per-row validation, batch processing, and deduplication.' },
-        { name: 'Natural-language query + export', detail: 'Parses phrases like "young males from Nigeria" into structured filters; the same filters power a cached CSV export.' },
-        { name: 'Genderize microservice · .NET 9', detail: 'A hardened wrapper over Genderize.io: input validation, is_confident scoring, 502 on upstream failure, 19 xUnit tests — live on EC2 behind Caddy with GitHub Actions CI/CD.' },
-        { name: 'Insighta CLI · C#', detail: 'A dotnet global tool (HngInsightaLabs.Cli): login / whoami, profile list/search/get/create/delete, and profiles export to CSV; configurable backend URL.' },
-        { name: 'Performance', detail: 'Composite indexes, versioned distributed caching, DbContext pooling, and SQLite WAL pragmas for concurrent access.' },
-      ],
-      sections: [
-        {
-          heading: 'The Genderize microservice',
-          body: 'The classification layer is a standalone .NET 9 service exposing GET /api/classify?name=. It validates input before any network call (400/422), maps the upstream response into a clean DTO — renaming count to sample_size and computing a single is_confident flag (probability ≥ 0.7 AND sample_size ≥ 100) — and turns any upstream timeout or outage into a clean 502 instead of a leaked exception. 19 xUnit tests (Moq + FluentAssertions) lock the behaviour in, and a GitHub Actions pipeline builds, tests, and deploys the Docker container to AWS EC2 behind Caddy on every push. It is live and documented with Swagger at api.hng.credianlab.xyz.',
-        },
-        {
-          heading: 'The operator CLI',
-          body: 'HNGinsighta-CLI is a C# global .NET tool (HngInsightaLabs.Cli, installable via dotnet tool install) and the operator/analyst client for the platform. It offers insighta login / logout / whoami, profile list / search / get / create / delete, and profiles export to filtered CSV, caching credentials at ~/.insighta/credentials.json with a configurable backend URL (INSIGHTA_BACKEND_URL or insighta config set-backend). It talks to the Insighta backend, giving analysts the same querying and export power from the terminal.',
-        },
-      ],
-      challenge: {
-        title: 'Being more reliable than the APIs you depend on',
-        solution:
-          'The platform is only as trustworthy as the third-party inference APIs behind it. The Genderize microservice makes that boundary defensive: input is validated before any network call, the upstream base URL, timeout, and key are validated at startup, and any upstream timeout, outage, or unusable payload is caught and surfaced as a clean 502 with a stable message. Confidence is reduced to one is_confident boolean instead of a raw probability callers must interpret, and 19 xUnit tests pin the validation rules, confidence boundaries, zero-sample handling, and upstream failure paths — so the contract holds even when the upstream wobbles.',
-      },
-      links: [
-        { label: 'Live · Swagger', href: 'https://api.hng.credianlab.xyz/index.html' },
-        { label: 'Try · classify?name=James', href: 'https://api.hng.credianlab.xyz/api/classify?name=James' },
-        { label: 'Backend repo', href: 'https://github.com/ukemeikot/genderise-api' },
-        { label: 'Genderize service repo', href: 'https://github.com/ukemeikot/genderize-wrapper-api' },
-        { label: 'CLI repo', href: 'https://github.com/ukemeikot/HNGinsighta-CLI' },
-      ],
-    },
-  },
-  {
-    slug: 'nextcloud-ddos-detector',
-    title: 'Nextcloud DDoS Detector',
-    type: 'Realtime Security Service',
-    categories: ['backend', 'devops'],
-    summary:
-      'A real-time traffic anomaly detector for Nextcloud that scores Nginx access logs, auto-bans offending IPs, and alerts admins on Slack.',
-    challenge:
-      'The hard part was distinguishing genuine attacks from normal traffic swings using rolling baselines, then acting on them automatically without false-positive lockouts.',
-    stackLine:
-      'Stack: Python, FastAPI, sliding-window analytics (deque + z-score/EWMA), iptables, Slack, Docker Compose, Nginx, MySQL.',
-    impact:
-      'Impact: detects credential-stuffing and volumetric spikes in real time, applies graduated IP bans, and surfaces everything on a live dashboard.',
-    details:
-      'A real-time anomaly detection system that monitors HTTP traffic to a Nextcloud instance via Nginx access logs. It uses 60-second sliding-window deques for per-IP and global request rates, a rolling 30-minute baseline with EWMA blending to model normal traffic by hour, and combined z-score + multiplier scoring to flag anomalies. Error-surge tightening catches credential-stuffing when 4xx/5xx rates spike. Offenders get a graduated ban schedule (10 min → 30 min → 2 hr → permanent) via iptables, with Slack alerts on bans/unbans and a FastAPI dashboard refreshing every 3 seconds.',
-    tech: ['Python', 'FastAPI', 'iptables', 'Slack API', 'Docker Compose', 'Nginx', 'MySQL', 'Anomaly Detection'],
-    repoUrl: 'https://github.com/ukemeikot/nextcloud-ddos-detector',
-    caseStudy: {
-      intro:
-        'Nextcloud DDoS Detector is a small SRE-style service that watches a Nextcloud instance’s traffic in real time, decides when something abnormal is happening, and acts — banning offenders and alerting the team — without a human in the loop.',
-      problem:
-        'Volumetric spikes and credential-stuffing do not announce themselves, and naive fixed thresholds either miss real attacks or lock out legitimate users during normal busy periods. The detector had to tell the difference using the traffic’s own rolling baseline, then respond automatically and proportionally.',
-      architecture:
-        'A Python/FastAPI service tails the Nginx access logs of a Nextcloud + MySQL stack (all in Docker Compose). It keeps 60-second sliding-window deques for per-IP and global request rates, and a rolling 30-minute baseline blended with EWMA so "normal" is modelled per hour of day. Each window is scored with both a z-score and a multiplier check — whichever trips first flags an anomaly — and an error-surge rule tightens thresholds when 4xx/5xx rates spike (the signature of credential stuffing). Offending IPs get a graduated ban via iptables, and a FastAPI dashboard refreshes every 3 seconds while bans, unbans, and global anomalies fire Slack alerts.',
-      modules: [
-        { name: 'sliding windows', detail: '60-second deques tracking per-IP and global request rates in real time.' },
-        { name: 'rolling baseline', detail: 'A 30-minute baseline with EWMA blending models normal traffic by hour of day.' },
-        { name: 'anomaly scoring', detail: 'Combined z-score + multiplier detection; whichever threshold breaches first triggers.' },
-        { name: 'error-surge tightening', detail: 'Tightens thresholds when 4xx/5xx rates spike to catch credential stuffing.' },
-        { name: 'graduated bans · iptables', detail: 'Escalating bans (10 min → 30 min → 2 hr → permanent) for repeat offenders.' },
-        { name: 'dashboard + Slack', detail: 'A FastAPI dashboard refreshing every 3s, with Slack alerts on bans/unbans/anomalies.' },
-      ],
-      challenge: {
-        title: 'Telling an attack apart from a busy Tuesday',
-        solution:
-          'Static rate limits are blunt — set them low and you ban real users at peak, set them high and you miss slow attacks. I made the detector learn the site’s own rhythm: a rolling 30-minute baseline blended with EWMA captures normal load per hour, and anomalies are judged relative to that baseline using both a z-score and a multiplier, so a spike only counts as a spike compared to what is normal right now. Error-surge tightening adds a second signal for credential stuffing, and bans escalate gradually so a one-off burst does not earn a permanent block.',
-      },
-      links: [{ label: 'Repo', href: 'https://github.com/ukemeikot/nextcloud-ddos-detector' }],
-    },
-  },
-
-  // ---------- DevOps ----------
-  {
-    slug: 'swiftdeploy',
-    title: 'SwiftDeploy',
-    type: 'Declarative Deployment CLI',
-    categories: ['devops'],
-    summary:
-      'A declarative Python CLI that builds, validates, and promotes a containerised web stack from a single YAML manifest, with OPA policy gates.',
-    challenge:
-      'The aim was a single source of truth: drive compose files, Nginx config, and policy from one manifest, and block unsafe promotions automatically.',
-    stackLine:
-      'Stack: Python, Flask, Gunicorn, Jinja2, Docker Compose, Nginx, Open Policy Agent, Prometheus.',
-    impact:
-      'Impact: enables policy-gated stable/canary promotion with chaos testing, live metrics, and append-only audit history — zero hand-edited config.',
-    details:
-      'SwiftDeploy turns a single YAML manifest into all deployment artifacts — docker-compose.yml, nginx.conf, and OPA policies — via Jinja2 templating. Two OPA-enforced gates (infrastructure resources and canary safety on error rates/latency) prevent unsafe promotions. A /chaos endpoint simulates degraded conditions in canary mode, observability comes from a live dashboard and Prometheus metrics, and audit trails are kept as append-only JSON logs. OPA runs on an internal-only network while only Nginx faces the public port, and stable/canary modes switch without downtime.',
-    tech: ['Python', 'Flask', 'Jinja2', 'Docker Compose', 'Nginx', 'OPA', 'Prometheus', 'YAML'],
-    repoUrl: 'https://github.com/ukemeikot/swiftdeploy',
-    caseStudy: {
-      problem:
-        'Shipping a containerised web stack usually means hand-writing and constantly re-syncing several config files — a Compose file, an Nginx config, and policy rules — which drift apart and quietly let unsafe deploys through. SwiftDeploy makes one manifest.yaml the single source of truth, generates everything else from it, and refuses to deploy or promote unless explicit policy gates pass.',
-      architecture:
-        'A three-layer model. The user layer is a single manifest.yaml (services, nginx, network, thresholds). The generation layer is a Python CLI that uses Jinja2 to render docker-compose.yml, nginx.conf, and opa-data.json on every init. The runtime layer is Docker Compose running a Flask API and Nginx on a public network, with an Open Policy Agent sidecar isolated on an internal policy network bound to 127.0.0.1:8181. "swiftdeploy deploy" scrapes host stats and asks OPA for an infrastructure decision; on ALLOW it brings the stack up and polls /healthz, on DENY it prints the violation and exits. "promote canary" scrapes /metrics twice across a window, computes error rate and p99 latency, then queries the canary-safety policy.',
-      modules: [
-        { name: 'deploy', detail: 'Runs the infrastructure gate, starts the stack, then health-checks /healthz before declaring success.' },
-        { name: 'promote', detail: 'Switches stable/canary modes; promoting to canary must clear the canary-safety gate first.' },
-        { name: 'validate', detail: 'Five pre-flight checks (images, ports, config syntax) before anything runs.' },
-        { name: 'status · dashboard.py', detail: 'Live terminal dashboard that scrapes /metrics on an interval and appends each reading to history.jsonl.' },
-        { name: 'audit', detail: 'Renders history.jsonl into a Markdown report: timeline, policy violations, and forced overrides.' },
-        { name: 'opa.py', detail: 'HTTP client that wraps every allow/deny decision from the OPA sidecar in typed dataclasses.' },
-        { name: 'app · /chaos', detail: 'Canary-only endpoint that injects slow or error responses to test the safety gates.' },
-      ],
-      challenge: {
-        title: 'Making deploy/promote decisions trustworthy and tamper-evident',
-        solution:
-          'The CLI never decides allow/deny on its own — it always queries the OPA sidecar, and all thresholds live only in the manifest (rendered to opa-data.json), so the Rego policies contain no hardcoded numbers and changing a limit is a manifest edit plus init, not a code change. The canary gate compares the change in error rate and p99 over a fixed window rather than absolute values, isolating the canary’s behaviour from long-term drift. OPA is bound to localhost on an internal-only Docker network so it is unreachable from outside, and every emergency --force override is appended to history.jsonl, leaving a complete audit trail of who overrode what and when.',
-      },
-    },
-  },
-  {
-    slug: 'devops-sandbox',
-    title: 'DevOps Sandbox',
-    type: 'Self-Service Environments',
-    categories: ['devops'],
-    summary:
-      'A self-service platform to provision isolated temporary environments, deploy apps, simulate failures, and monitor health — then auto-tear down.',
-    challenge:
-      'It had to manage full environment lifecycles on a single VM, with chaos simulation and health tracking, implemented identically in both Bash and PowerShell.',
-    stackLine:
-      'Stack: Python, Flask, Docker, Docker Compose, Nginx, Bash + PowerShell, REST control plane.',
-    impact:
-      'Impact: each deployment gets an isolated Docker network, a TTL cleanup daemon, 30s health polling, chaos modes, and real-time log shipping.',
-    details:
-      'A self-service platform that provisions isolated, temporary environments, deploys applications, simulates infrastructure failures, monitors health, and tears resources down on TTL expiry or on demand. Each deployment gets its own Docker network and container to prevent cross-environment interference. The lifecycle layer is implemented twice (Bash + PowerShell) with identical results. A background cleanup daemon destroys expired environments, a health monitor polls every 30 seconds and flips status to degraded after three consecutive failures, and chaos modes simulate crash, pause, network disruption, recovery, and stress. A REST control plane on port 5000 manages everything.',
-    tech: ['Python', 'Flask', 'Docker', 'Nginx', 'Bash', 'PowerShell', 'Chaos Engineering', 'REST'],
-    repoUrl: 'https://github.com/ukemeikot/devops-sandbox',
-    caseStudy: {
-      intro:
-        'DevOps Sandbox is a self-service platform for throwaway environments: spin one up, deploy into it, break it on purpose, watch it heal or fail, and have it clean itself up — all from a small REST control plane.',
-      problem:
-        'Teams need safe, isolated places to test deployments and failure scenarios, but standing these up by hand is slow and they are easy to leave running and forget. The sandbox had to automate the whole lifecycle — provision, deploy, monitor, chaos-test, and tear down — on a single VM, and behave identically whether the host is Linux or Windows.',
-      architecture:
-        'A Python/Flask REST control plane (port 5000) drives Docker and Docker Compose, with Nginx as the reverse proxy. Each environment gets its own Docker network and container so they cannot interfere. The lifecycle layer is implemented twice — Bash and PowerShell — producing identical on-disk results, so the same platform runs on Linux or Windows. A background cleanup daemon destroys environments when their TTL expires, a health monitor polls every 30 seconds and flips an environment to "degraded" after three consecutive failures (~90s), and chaos modes simulate crash, pause, network disruption, recovery, and stress. Logs are shipped in real time with a forensic archive retained.',
-      modules: [
-        { name: 'control plane · Flask', detail: 'REST API on port 5000 to provision, deploy, inspect, and tear down environments.' },
-        { name: 'isolation', detail: 'Each environment gets its own Docker network and container to prevent cross-env interference.' },
-        { name: 'dual lifecycle · Bash + PowerShell', detail: 'The lifecycle layer is implemented twice with identical results, for Linux and Windows hosts.' },
-        { name: 'cleanup daemon · TTL', detail: 'Background daemon destroys environments when their time-to-live expires.' },
-        { name: 'health monitor', detail: 'Polls every 30s; flips status to degraded after three consecutive failures (~90s).' },
-        { name: 'chaos modes', detail: 'Simulates crash, pause, network disruption, recovery, and stress for failure testing.' },
-      ],
-      challenge: {
-        title: 'One platform, two operating systems, identical behaviour',
-        solution:
-          'The hard requirement was that the same sandbox behave the same on Linux and Windows. Rather than abstract over a single scripting language, the lifecycle layer is implemented twice — once in Bash, once in PowerShell — and verified to produce identical on-disk results, while the Flask control plane and Docker orchestration stay shared. That keeps the developer experience and the REST contract identical regardless of host, and makes the chaos and health behaviour reproducible across environments.',
-      },
-      links: [{ label: 'Repo', href: 'https://github.com/ukemeikot/devops-sandbox' }],
     },
   },
 ];

@@ -95,3 +95,11 @@ export interface ProjectFilter {
   id: 'all' | ProjectCategory;
   label: string;
 }
+
+export interface RepoEntry {
+  name: string;
+  role: string;
+  description: string;
+  tech: string[];
+  links: Array<{ label: string; href: string }>;
+}

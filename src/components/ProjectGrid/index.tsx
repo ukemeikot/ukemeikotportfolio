@@ -18,15 +18,14 @@ const filters: ProjectFilter[] = [
   { id: 'devops', label: 'DevOps' },
 ];
 
-// Xental (payments infrastructure) leads, then FitCall and one of each discipline.
+// Xental (payments infrastructure) leads, then the other products, then the rest.
 const FEATURED_ORDER = [
   'xental',
+  'readhub',
+  'kredar',
   'fitcall',
-  'messaging-calling-backend',
-  'insighta-genderise-api',
-  'mira-care',
   'crednews-newsroom',
-  'swiftdeploy',
+  'messaging-calling-backend',
 ];
 
 const ProjectGrid = ({ projects, onOpen }: ProjectGridProps) => {
