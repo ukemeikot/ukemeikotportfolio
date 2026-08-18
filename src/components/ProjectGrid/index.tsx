@@ -23,6 +23,7 @@ const FEATURED_ORDER = [
   'xental',
   'readhub',
   'kredar',
+  'tadis',
   'fitcall',
   'crednews-newsroom',
   'messaging-calling-backend',

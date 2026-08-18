@@ -20,6 +20,7 @@ export const projects: ProjectEntry[] = [
       'Xental is a payments infrastructure platform: businesses onboard as sub-merchants (KYC + document review), collect via a hosted checkout or a dedicated virtual account, split and settle funds to multiple parties, and pay out — all on Nomba bank rails. It ships with a real developer platform (scoped API keys, OAuth, a live sandbox, managed webhook endpoints, OpenAPI docs) and an AI-native layer: a payments Copilot you can ask in natural language, insights/aging/forecast analytics, automation flows, and agent-discoverable APIs (a `/.well-known/llms.txt`). I built the .NET 10 backend, the React/Next dashboard, hosted checkout and sandbox, the developer platform, and ran it in production on AWS. PayLibre — a multi-tenant school-fee platform — is the flagship product I built on top of Xental, and I operate the wider family (PayLibre, Kredar, AjoVault) on shared infrastructure.',
     tech: ['.NET 10', 'ASP.NET Core', 'EF Core', 'PostgreSQL', 'Nomba', 'React', 'Next.js', 'TypeScript', 'Docker', 'Docker Compose', 'Traefik', 'GitHub Actions', 'GHCR', 'AWS EC2', 'Trivy', 'OpenTelemetry'],
     liveUrl: 'https://xental.online',
+    preview: '/previews/xental.png',
     caseStudy: {
       intro:
         'Xental is a payments infrastructure platform — think of the primitives a business needs to accept and move money: hosted checkout, sub-merchant onboarding with KYC, dedicated virtual accounts for bank-transfer collection, split settlement across parties, transfers/payouts, and a full developer platform (scoped API keys, OAuth, a live sandbox, managed webhooks, OpenAPI docs) — all riding Nomba bank rails. On top of the money primitives it has an AI-native layer: a Copilot you can ask about your payments in plain language, insights/aging/forecast analytics, automation flows, and APIs designed to be discoverable by AI agents. I built it end-to-end — the .NET 10 backend, the React/Next dashboard and hosted checkout, the developer platform and sandbox, the security hardening, and the AWS CI/CD that ships it — and I run it in production. PayLibre, a multi-tenant school-fee product, is the flagship built on Xental’s API, so this is a rare full-stack story: the rail and a real product on top of it.',
@@ -129,6 +130,7 @@ export const projects: ProjectEntry[] = [
     tech: ['Node.js', 'Express', 'TypeScript', 'MongoDB', 'React', 'Vite', 'Tailwind CSS', 'Google OAuth', 'MinIO / S3', 'Docker', 'Traefik', 'GitHub Actions', 'Cloudflare R2'],
     liveUrl: 'https://app.readhub.study',
     repoUrl: 'https://github.com/READHUB-STUDYAPP/readhub-backend',
+    preview: '/previews/readhub.png',
     caseStudy: {
       intro:
         'ReadHub is a reading and study platform — sign in with Google, bring your own books (PDF or EPUB), read them in the browser, take notes, and track your reading sessions and stats. I built both sides: the Node.js / Express (TypeScript) API over MongoDB and the React / Vite app, then re-platformed how files are stored so uploads go straight from the browser to object storage. It runs in production on a shared VPS with a PR-driven CI/CD pipeline and encrypted, off-site backups, so this is a full-stack story from the reader’s upload button down to the nightly backup.',
@@ -201,6 +203,7 @@ export const projects: ProjectEntry[] = [
     tech: ['Docker', 'Docker Compose', 'Traefik', 'GitHub Actions', 'GHCR', 'AWS EC2', 'Trivy', '.NET 10', 'Next.js', 'CORS', 'Resend'],
     liveUrl: 'https://kredar.xyz',
     repoUrl: 'https://github.com/kredar-vault/kredar-backend',
+    preview: '/previews/kredar.png',
     caseStudy: {
       intro:
         'Kredar is a Dedicated Virtual Accounts (DVA) fintech — infrastructure that lets a business give each of its customers a dedicated virtual bank account and reconcile the money that arrives — built by a team for the DevCareer × Nomba Hackathon. I want to be precise about my role: I did not build the product features. I joined as the deployment / DevOps engineer for the family (Kredar and its companion savings app, AjoVault), and my job was to take the application code the team wrote and make it production-ready and continuously deployable.',
@@ -271,6 +274,7 @@ export const projects: ProjectEntry[] = [
     tech: ['Go', 'Gin', 'PostgreSQL', 'Redis', 'React Native', 'Expo', 'TypeScript', 'StoreKit 2', 'FCM', 'Postman', 'AWS EC2', 'Nginx', 'GitHub Actions'],
     liveUrl: 'https://fitcall.me',
     repoUrl: 'https://github.com/hngprojects/personal-trainer-be',
+    preview: '/previews/fitcall.png',
     caseStudy: {
       intro:
         'FitCall is a personal-training marketplace: clients discover a trainer, book a slot, subscribe, and meet over video. It ships as a web app at fitcall.me and an Android app on Google Play, backed by a Go API. I rarely get to point at one product and say I touched the backend, the mobile app, the test suite, and the deployment — on FitCall I did all four, so this is a rare end-to-end look at one product, from API to app to tests to the servers it runs on.',
@@ -354,6 +358,7 @@ export const projects: ProjectEntry[] = [
     tech: ['React Native', 'Expo', 'TypeScript', 'TanStack Query', 'Firebase', 'Electron', 'React Native Web', 'Gemini AI'],
     liveUrl: 'https://mobile.hng.credianlab.xyz/',
     repoUrl: 'https://github.com/ukemeikot/newsroom',
+    preview: '/previews/crednews-newsroom.png',
     caseStudy: {
       problem:
         'News consumption is fragmented across apps and devices, and most apps degrade badly on poor connections. CredNews unifies a fast headlines feed, tech-event discovery, offline saved reading, community fact-checking, and a streaming AI assistant — and runs on iOS, Android, web, and Windows desktop from a single codebase.',
@@ -372,6 +377,73 @@ export const projects: ProjectEntry[] = [
         solution:
           'A single AI provider on a free tier rate-limits almost immediately. CredNews rotates round-robin across four providers — Groq (fastest), Cerebras (quality), OpenRouter (free routes) and Gemini — with per-provider cooldowns when one returns 429 or errors, pooling roughly 80 requests/minute of free capacity. Responses stream via SSE over XHR and render character-by-character at about 125 chars/second, so even an instant reply feels like natural typing. On desktop, excluding node_modules from the Electron package kept the installer near 99 MB instead of 800 MB+.',
       },
+    },
+  },
+
+  // ---------- TADIS 2026 (3D conference site) ----------
+  {
+    slug: 'tadis',
+    title: 'TADIS 2026',
+    type: '3D Conference Website',
+    categories: ['frontend-mobile'],
+    summary:
+      'A 3D, scroll-driven marketing site for The African Dream Network International Summit (TADIS 2026) — a WebGL Africa globe, sticky-stack narrative panels, speaker stages, and one-tap registration delegated to Luma. Built with React, TypeScript and three.js, and tuned to run the whole scroll choreography at 60fps.',
+    challenge:
+      'Drive a page full of scroll-linked 3D and motion at 60fps without re-rendering React on every frame, and degrade gracefully to a calm, fast layout on phones and for reduced-motion users.',
+    stackLine:
+      'Stack: React, TypeScript, Vite, three.js (WebGL), feature-sliced architecture, a shared rAF scroll driver, the Luma checkout embed; deployed on Vercel.',
+    impact:
+      'Impact: a live event site (tadis-conference.vercel.app) with a WebGL globe and scroll-driven storytelling that stays at 60fps, collapses cleanly to one column on mobile, honours prefers-reduced-motion, and hands ticketing to Luma with a plain-link fallback.',
+    details:
+      'TADIS 2026 is the marketing site for a one-day summit in Uyo, Akwa Ibom. It is a single, richly animated page: a three.js Africa globe behind the hero, sticky-stack panels that swap as you scroll, speaker stages and reveal rails, a countdown, programme, venue and FAQ. It is feature-sliced (one folder per section) with all copy kept out of the components in a typed content layer, so the running order or a speaker can change by editing data, not JSX. Registration is delegated to Luma via its official embed. I built it end-to-end and deployed it on Vercel.',
+    tech: ['React', 'TypeScript', 'Vite', 'three.js', 'WebGL', 'CSS', 'Vercel'],
+    liveUrl: 'https://tadis-conference.vercel.app',
+    repoUrl: 'https://github.com/ukemeikot/tadis-conference',
+    preview: '/previews/tadis.png',
+    caseStudy: {
+      intro:
+        'TADIS 2026 is the site for The African Dream Network International Summit — one day, in Uyo. I wanted it to feel like the event: a WebGL Africa globe behind the hero, narrative panels that stack and swap as you scroll, speaker stages that come forward, a live countdown. But a page like that is easy to make janky, so the real work was making all of it run smoothly and still be fast and calm on a phone. I built it solo — architecture, 3D, motion, content model, and deploy.',
+      problem:
+        'Scroll-driven 3D is where marketing sites go to die: bind effects to React state and you re-render the tree dozens of times a second and drop frames. On top of that the motion has to be a feature on a laptop and a non-issue on a phone — no wasted battery, no motion for people who ask for less — and registration has to actually issue a ticket, which a static site can’t do on its own.',
+      architecture:
+        'A feature-sliced React + TypeScript app (Vite): one folder per page section, a shared layer for cross-cutting UI and hooks, and every piece of copy/data in a typed content layer so editors never touch JSX. All scroll-driven effects subscribe to one rAF-throttled listener (useScrollFrame) and write straight to the DOM through refs — deliberately not React state — so the 60fps path never re-renders the tree; useScrollSpy is the single exception, because the nav underline changes only a handful of times per page. A useRichMotion() gate enables the 3D choreography only at viewport ≥900px and when prefers-reduced-motion is off; below that the CSS has already collapsed to one column, and the three.js globe renders a single static frame instead of animating. Registration is delegated to Luma’s official checkout embed, with each trigger a real <a href> so it degrades to a plain link if the embed script is blocked. Deployed on Vercel.',
+      contributions: [
+        {
+          area: '3D & motion',
+          items: [
+            'Built the three.js Africa globe behind the hero, with a static-frame fallback under reduced motion.',
+            'Wrote a single rAF-throttled scroll driver that all scroll effects share, writing to the DOM via refs to avoid per-frame React re-renders.',
+            'Built the sticky-stack about panels, speaker stages and reveal rails, and a live countdown.',
+            'Added a motion budget (useRichMotion) that gates the 3D on width ≥900px and no prefers-reduced-motion.',
+          ],
+        },
+        {
+          area: 'Architecture & content',
+          items: [
+            'Structured the app feature-sliced (one folder per section) with a shared UI/hooks layer.',
+            'Kept all copy and data in a typed content layer so the programme, speakers, venue and FAQ change by editing data, not components.',
+            'Centralised date/venue/contact in a single site config that the hero, countdown, programme, registration and footer all read from.',
+          ],
+        },
+        {
+          area: 'Registration & delivery',
+          items: [
+            'Integrated Luma’s official checkout embed for ticketing, loaded after mount and re-scanned because React renders the triggers late.',
+            'Made every register trigger a real <a href> so it degrades to a plain link if the embed is blocked.',
+            'Built the asset pipeline — full-size (≤1600px) plus 900px card crops with EXIF rotation baked in — and deployed on Vercel.',
+          ],
+        },
+      ],
+      challenge: {
+        title: '60fps scroll choreography without re-rendering React',
+        solution:
+          'The trap in a scroll-animated page is running the animation through React state — every frame becomes a re-render and the page stutters. Instead, all scroll-driven effects subscribe to one rAF-throttled listener and mutate the DOM directly through refs, so the 60fps path never touches React’s render cycle. The only component allowed to re-render on scroll is the nav (useScrollSpy), because its underline moves just a few times per page. Combined with a motion budget that switches the 3D off entirely on phones and under prefers-reduced-motion, the page feels alive on a laptop and stays fast and calm everywhere else.',
+      },
+      links: [
+        { label: 'Live · tadis-conference.vercel.app', href: 'https://tadis-conference.vercel.app' },
+        { label: 'GitHub repo', href: 'https://github.com/ukemeikot/tadis-conference' },
+        { label: 'Event · Luma', href: 'https://luma.com/xpbcg8ks' },
+      ],
     },
   },
 
@@ -394,6 +466,7 @@ export const projects: ProjectEntry[] = [
     tech: ['Python', 'FastAPI', 'PostgreSQL', 'JWT', 'Google OAuth', 'WebSockets', 'Full-Text Search', 'CLI', 'Pytest'],
     liveUrl: 'https://messagingandcallingbackend.credianlab.xyz/',
     repoUrl: 'https://github.com/ukemeikot/messaging_and_calling_backend',
+    preview: '/previews/messaging-calling-backend.png',
     caseStudy: {
       problem:
         'Almost every product that needs chat or calling rebuilds the same backend from scratch — authentication, contacts, presence, message storage, call signalling, and search. I packaged all of it into a single installable FastAPI SDK, with a CLI that scaffolds a new project, so a team can stand up a production communication layer in minutes instead of reassembling the same primitives every time.',

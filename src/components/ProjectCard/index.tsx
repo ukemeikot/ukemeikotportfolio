@@ -32,6 +32,17 @@ const ProjectCard = ({ project, delay = 0, onOpen }: ProjectCardProps) => (
         }
       }}
     >
+      {project.preview ? (
+        <div className={styles.preview}>
+          <img
+            src={project.preview}
+            alt={`${project.title} preview`}
+            loading="lazy"
+            className={styles.previewImg}
+          />
+        </div>
+      ) : null}
+
       <div className={styles.top}>
         <div className={styles.tags}>
           {project.categories.map((category) => (

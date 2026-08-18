@@ -86,6 +86,7 @@ export interface ProjectEntry {
   tech: string[];
   repoUrl?: string;
   liveUrl?: string;
+  preview?: string;
   images?: ProjectImage[];
   isMira?: boolean;
   caseStudy?: ProjectCaseStudy;
